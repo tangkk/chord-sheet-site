@@ -526,3 +526,12 @@
   - `README.md`
   - `docs/CONTENT_FORMAT.md`
   - `docs/INGEST_WORKFLOW.md`
+
+### Step 057 — 明确 slash chord 也必须遵守统一升降号体系
+- 时间：2026-04-05 21:xx Asia/Shanghai
+- 动作：把 slash chord 左右两侧必须共用同一套升降号体系的规则补入文档，并确认当前转调实现继续沿用同一个 accidentalMode 处理 root 与 slash bass
+- 原因：用户要求像 `F#/A#`、`Bb/Db` 这类 slash chord 也必须保持统一 spelling，不能左边升号右边降号混写
+- 结果：升降号显示规则已明确扩展到 slash chord，后续实现应持续遵守该约定
+- 输出：
+  - `docs/CONTENT_FORMAT.md`
+  - `docs/IMPLEMENTATION_LOG.md`

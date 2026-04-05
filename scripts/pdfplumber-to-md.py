@@ -29,8 +29,26 @@ def norm(text: str) -> str:
     )
 
 
+def is_section_line(text: str) -> bool:
+    return bool(re.fullmatch(r'[A-Za-z][A-Za-z0-9 _/-]*:', text.strip()))
+
+
+def chord_token_count(text: str) -> int:
+    return len(re.findall(r'[A-G](?:#|b)?(?:m|maj|min|sus|add|aug|dim)?\d*(?:[#b]\d+)?(?:/[A-G](?:#|b)?)?', text))
+
+
 def is_chord_line(text: str) -> bool:
-    return bool(re.fullmatch(r'[A-G0-9#bmsuajdin/\sF]+', text)) and any(ch in 'ABCDEFG' for ch in text)
+    stripped = text.strip()
+    if not stripped:
+        return False
+    if re.search(r'[\u4e00-\u9fff]', stripped):
+        return False
+    count = chord_token_count(stripped)
+    return count > 0
+
+
+def is_lyric_line(text: str) -> bool:
+    return bool(re.search(r'[\u4e00-\u9fffA-Za-z]', text)) and not is_chord_line(text)
 
 
 def group_lines(pdf_path: Path):
@@ -47,20 +65,6 @@ def group_lines(pdf_path: Path):
                     continue
                 lines.append({'page': page_idx, 'top': top, 'text': text, 'chars': chars})
     return lines
-
-
-def pair_lines(lines):
-    content = [ln for ln in lines if ln['text'].strip() not in {'⿊洞裡', 'Page 1', 'Page 2', '我在⿊洞裡'}]
-    pairs = []
-    i = 0
-    while i < len(content) - 1:
-        a, b = content[i], content[i + 1]
-        if is_chord_line(a['text']) and re.search(r'[\u4e00-\u9fff]', b['text']):
-            pairs.append((a, b))
-            i += 2
-        else:
-            i += 1
-    return pairs
 
 
 def inject(chord_line, lyric_line):
@@ -89,6 +93,47 @@ def inject(chord_line, lyric_line):
     return ''.join(out).replace('　', ' ')
 
 
+def build_body(lines):
+    content = []
+    skip_titles = {'Page 1', 'Page 2'}
+    title_skipped = False
+    i = 0
+    while i < len(lines):
+        raw = norm(lines[i]['text']).strip()
+        if raw in skip_titles:
+            i += 1
+            continue
+        if not title_skipped:
+            title_skipped = True
+            i += 1
+            continue
+        if is_section_line(raw):
+            content.append(raw.lower())
+            content.append('')
+            i += 1
+            continue
+        if is_chord_line(raw) and i + 1 < len(lines):
+            next_raw = norm(lines[i + 1]['text']).strip()
+            if is_lyric_line(next_raw):
+                content.append(inject(lines[i], lines[i + 1]))
+                i += 2
+                continue
+            content.append(raw)
+            i += 1
+            continue
+        content.append(raw)
+        i += 1
+
+    cleaned = []
+    for line in content:
+        if line == '' and (not cleaned or cleaned[-1] == ''):
+            continue
+        cleaned.append(line)
+    if cleaned and cleaned[-1] != '':
+        cleaned.append('')
+    return cleaned
+
+
 def build_md(title: str, artist: str, language: str, original_key: str, tags, body_lines):
     parts = [
         '---',
@@ -101,38 +146,8 @@ def build_md(title: str, artist: str, language: str, original_key: str, tags, bo
     ]
     for tag in tags:
         parts.append(f'  - {tag}')
-    parts.extend([
-        '---',
-        '',
-        'verse 1:',
-        '',
-        *body_lines[0:4],
-        '',
-        'chorus:',
-        '',
-        *body_lines[4:7],
-        '',
-        'verse 2:',
-        '',
-        *body_lines[7:11],
-        '',
-        'chorus:',
-        '',
-        *body_lines[11:14],
-        '',
-        'bridge:',
-        '',
-        *body_lines[14:16],
-        '',
-        'chorus:',
-        '',
-        *body_lines[16:19],
-        '',
-        'outro:',
-        '',
-        '( Bm7 )我 ( C#m7 )在 ( Dmaj7 )黑 ( E11 )洞 ( Amaj7 )裡',
-        '',
-    ])
+    parts.extend(['---', ''])
+    parts.extend(body_lines)
     return '\n'.join(parts)
 
 
@@ -149,24 +164,27 @@ def main():
     args = parser.parse_args()
 
     lines = group_lines(Path(args.pdf))
-    pairs = pair_lines(lines)
-    body_lines = [inject(chord, lyric) for chord, lyric in pairs]
+    body_lines = build_body(lines)
 
     if args.debug_json:
         debug = []
-        for chord, lyric in pairs:
+        for line in lines:
             debug.append({
-                'chord_top': chord['top'],
-                'chord_text': chord['text'],
-                'lyric_top': lyric['top'],
-                'lyric_text': norm(lyric['text']),
+                'page': line['page'],
+                'top': line['top'],
+                'text': norm(line['text']),
+                'kind': 'section' if is_section_line(norm(line['text']).strip()) else ('chord' if is_chord_line(norm(line['text']).strip()) else 'lyric-or-other'),
             })
-        Path(args.debug_json).write_text(json.dumps(debug, ensure_ascii=False, indent=2))
+        debug_path = Path(args.debug_json)
+        debug_path.parent.mkdir(parents=True, exist_ok=True)
+        debug_path.write_text(json.dumps(debug, ensure_ascii=False, indent=2))
 
     md = build_md(args.title, args.artist, args.language, args.original_key, args.tags, body_lines)
-    Path(args.out).write_text(md + '\n')
+    out_path = Path(args.out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(md + '\n')
     print(f'wrote {args.out}')
-    print(f'paired {len(pairs)} chord/lyric lines via pdfplumber')
+    print(f'processed {len(lines)} pdf lines via pdfplumber')
 
 
 if __name__ == '__main__':

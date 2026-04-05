@@ -311,9 +311,25 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
   .chords-only-line {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px 8px;
+    gap: 2px 8px;
     align-items: center;
     padding: 0;
+    margin: 2px 0;
+  }
+
+  .section-line + .chords-only-line {
+    margin-top: 4px;
+  }
+
+  .chords-only-line + .chords-only-line {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .chords-only-line + .line,
+  .chords-only-line + .alt-line,
+  .chords-only-line + .section-line {
+    margin-top: 6px;
   }
 
   .chords-only-chip {

@@ -1,5 +1,14 @@
 export type AccidentalMode = 'sharp' | 'flat';
 
+const DEFAULT_SHARP_KEYS = new Set(['C', 'G', 'D', 'A', 'E', 'Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m']);
+
+export function getDefaultAccidentalMode(key: string): AccidentalMode {
+  const normalized = key.trim();
+  if (normalized.includes('b')) return 'flat';
+  if (normalized.includes('#')) return 'sharp';
+  return DEFAULT_SHARP_KEYS.has(normalized) ? 'sharp' : 'flat';
+}
+
 const SHARP_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const FLAT_NOTES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
 
