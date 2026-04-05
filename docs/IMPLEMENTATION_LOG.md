@@ -153,16 +153,18 @@
 
 ### Step 016 — 调整默认升降号逻辑为“顺序固定，但命名跟随目标 key”
 - 时间：2026-04-06 00:xx Asia/Shanghai
-- 动作：修正上一轮把默认 accidental mode 直接固定成 flat 的实现，改为：key 的 12 个位置顺序固定，但每个位置的默认 spelling 由目标 key 自身决定
+- 动作：修正上一轮把默认 accidental mode 直接固定成 flat 的实现，改为：key 的 12 个位置顺序固定，但每个位置的默认 spelling 由目标 key 自身决定，并把这套映射整理成文档中的显式规则
 - 原因：用户需要的是“默认顺序固定”，不是“全部默认显示为降号”；例如 `F#` 应继续默认显示为 `F#`，而不是被压成 `Gb`
 - 结果：
   - 默认顺序仍然稳定
   - 默认 spelling 恢复为按目标 key 选择更自然的命名
   - `♭ / ♯` 按钮显示会跟随当前目标 key 的默认命名，而不是整站统一全降
+  - 文档中已把“固定顺序 / 默认命名 / 按钮职责”拆开写清楚，减少前后表述打架
 - 输出：
   - `src/lib/chords.ts`
   - `src/components/ChordSheet.tsx`
   - `docs/CONTENT_FORMAT.md`
+  - `docs/IMPLEMENTATION_LOG.md`
 
 ### Step 015 — 切换 remote 到 SSH 并执行首次 push
 - 时间：2026-04-05 17:xx Asia/Shanghai
