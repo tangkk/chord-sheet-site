@@ -16,7 +16,7 @@
 - 不是盲目全自动导入器
 - 目标是减少重复手工整理，而不是跳过人工检查
 
-## 支持的输入形态（第一版）
+## 支持的输入形态（当前）
 
 ### 1. 和弦直接内嵌歌词
 ```text
@@ -39,6 +39,14 @@ E/G# F#m7
 Eb Bb/D | Cm7 Eb/Bb | G Cm F | Bb Eb Ab | Bm7 E11
 ```
 
+### 5. PDF（保留视觉对位信息的输入源）
+当 Notes 原文中的和弦位置对齐很重要，而聊天纯文本会丢失空格和横向位置时，可优先使用 PDF 输入。
+
+当前策略：
+- PDF 是正式支持的输入来源之一
+- 优先用于“和弦压在具体歌词字位上”的曲谱
+- 第一版目标是提取可审阅草案，不承诺百分之百自动精准还原
+
 ## 用法
 
 ```bash
@@ -54,11 +62,25 @@ pnpm normalize:sheet /path/to/raw.txt "今夜没有风" "梁咏琪" "A"
 pnpm normalize:sheet /path/to/raw.txt "今夜没有风" "梁咏琪" "A" > /tmp/jinye-meiyou-feng.md
 ```
 
+### PDF 提取（第一版）
+
+```bash
+cd ~/Documents/Projects/chord-sheet-site
+pnpm extract:pdf /path/to/song.pdf > /tmp/song-from-pdf.txt
+```
+
+建议流程：
+1. 先用 `extract:pdf` 提取可读文本
+2. 人工查看位置/空格是否仍足够可靠
+3. 再决定是否继续进入 `normalize:sheet` 或手工整理
+
 ## 当前限制
 
 - 不会自动写入 `src/data/`
 - 不会自动 commit / push
 - 若“和弦数量”和“括号定位数量”不一致，会给出 warning
+- PDF 第一版目前依赖 Ghostscript 的 `txtwrite` 提取
+- PDF 提取后仍需人工检查对位是否足够可靠
 - 对复杂变体仍应人工审阅
 
 ## 验收提醒

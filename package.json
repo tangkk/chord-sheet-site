@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "normalize:sheet": "node scripts/normalize-chord-sheet.mjs"
+    "normalize:sheet": "node scripts/normalize-chord-sheet.mjs",
+    "extract:pdf": "node scripts/extract-chord-sheet-from-pdf.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.2",

@@ -425,3 +425,14 @@
 - 输出：
   - `src/pages/index.astro`
   - `src/layouts/Layout.astro`
+
+### Step 047 — 将 PDF 输入纳入入库工具链第一版
+- 时间：2026-04-05 19:xx Asia/Shanghai
+- 动作：新增 `scripts/extract-chord-sheet-from-pdf.mjs`，并把 PDF 写入 README 与入库工作流文档
+- 原因：用户确认希望把 PDF 作为正式输入源支持，以尽量保留 Notes 中的视觉对位信息
+- 结果：仓库已具备第一版 PDF 提取入口，可先提取可审阅文本草案再进入后续规范化流程
+- 输出：
+  - `scripts/extract-chord-sheet-from-pdf.mjs`
+  - `package.json`
+  - `README.md`
+  - `docs/INGEST_WORKFLOW.md`
