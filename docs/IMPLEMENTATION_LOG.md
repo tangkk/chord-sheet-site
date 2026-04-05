@@ -545,6 +545,25 @@
   - `docs/CONTENT_FORMAT.md`
   - `docs/IMPLEMENTATION_LOG.md`
 
+### Step 063 — 收紧默认调名体系并尊重 originalKey 原始 spelling
+- 时间：2026-04-06 00:xx Asia/Shanghai
+- 动作：把默认调名体系收紧为 `C / D / E / G / A / B / F#` 用升号，其余常见黑键调默认用降号；同时明确页面 `transpose = 0` 与工具条默认状态必须尊重用户提供的 `originalKey` spelling
+- 原因：用户明确要求 `Ab` 调歌曲的默认显示和 transpose 工具都必须保持降号体系，不能擅自变成 `G#`
+- 结果：默认调名与工具条的 accidental 规则已文档化为项目硬规则
+- 输出：
+  - `docs/CONTENT_FORMAT.md`
+  - `docs/IMPLEMENTATION_LOG.md`
+
+### Step 064 — 升级 pdfplumber 行分类与一对多配对模型
+- 时间：2026-04-06 00:xx Asia/Shanghai
+- 动作：重写 `pdfplumber` 路线中的行分类与逻辑行聚合，支持 chord / lyric / section / label / blank 分类，支持一条和弦行对应多条歌词行，并继续保留 chord-only 段、结构标题与可恢复空行
+- 原因：用户在《枫叶做的风铃》指出：不要把不是 chords 的行强行当 chords，而且 PDF 会出现一行 chords 对多行歌词的情况
+- 结果：PDF 入库脚本从简单的物理行配对，升级为“先分类，再配对”的逻辑行模型
+- 输出：
+  - `scripts/pdfplumber-to-md.py`
+  - `docs/INGEST_WORKFLOW.md`
+  - `docs/IMPLEMENTATION_LOG.md`
+
 ### Step 058 — 记录 sourceKey / originalKey 双字段展示模式
 - 时间：2026-04-05 21:xx Asia/Shanghai
 - 动作：将“原始输入 key 与真实原调不一致时，应记录 `sourceKey` 并在页面默认直接展示 `originalKey`”补入 README 与内容格式文档

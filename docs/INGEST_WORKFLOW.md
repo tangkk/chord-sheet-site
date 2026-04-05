@@ -87,8 +87,10 @@ pnpm align:pdf /path/to/song.pdf > /tmp/song-aligned-draft.txt
 1. PDF 入库优先走 `pdfplumber` 路线，而不是只靠 Ghostscript `txtwrite`
 2. `txtwrite` 可作为快速可读文本草案，但不是高精度对位的最终依据
 3. `pdfplumber` 负责读取字符级坐标 / 行坐标 / 和弦列位置
-4. 生成的 md 默认视为“坐标驱动草案”，仍需本地验收
-5. 若目标是尽量接近 PDF 页面视觉效果，后续可继续增强渲染层，而不只停留在普通文本流
+4. 脚本应先做行分类，再做配对；至少区分 chord line / lyric line / section / label / blank，不能把不是 chords 的行强行当作 chords
+5. 需要支持一条和弦行对应多条歌词行，不再默认强绑成 1:1
+6. 生成的 md 默认视为“坐标驱动草案”，仍需本地验收
+7. 若目标是尽量接近 PDF 页面视觉效果，后续可继续增强渲染层，而不只停留在普通文本流
 
 建议流程：
 1. 运行正式脚本入口：
@@ -107,9 +109,10 @@ pnpm pdfplumber:md -- \
 ```
 
 2. 保证：和弦不丢、字不丢、行结构不丢
-3. 将结果整理为项目 md（必要时做少量人工精修）
-4. 本地用 `pnpm build` / `pnpm preview` 验收
-5. 验收通过后再决定是否 push
+3. 特别检查：section / intro / chord-only 段是否保住；是否出现一条 chord row 对多条歌词时只给第一行上和弦；是否误生成 `() () () ()` 这类空占位
+4. 将结果整理为项目 md（必要时做少量人工精修）
+5. 本地用 `pnpm build` / `pnpm preview` 验收
+6. 验收通过后再决定是否 push
 
 ---
 
