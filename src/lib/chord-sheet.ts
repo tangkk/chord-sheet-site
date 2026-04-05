@@ -59,6 +59,13 @@ export function parseChordLine(line: string): ParsedLine {
     segments.push({ chord: null, lyric: line });
   }
 
+  const allWhitespaceLyrics = segments.every((segment) => segment.lyric.trim() === '');
+  const allHaveChords = segments.every((segment) => segment.chord && segment.chord.trim() !== '');
+
+  if (allWhitespaceLyrics && allHaveChords) {
+    return { type: 'chords-only', chords: segments.map((segment) => segment.chord!).filter(Boolean) };
+  }
+
   return { type: 'segments', segments };
 }
 

@@ -243,3 +243,4 @@
   - `src/lib/chord-sheet.ts`
   - `src/components/ChordSheet.tsx`
   - `src/layouts/Layout.astro`
+- 备注：首轮实现只识别了裸和弦文本行，未覆盖 `( A ) ( Dm6 ) ...` 这种已规范化的纯和弦写法；后续补充为：当一整行所有 segment 都仅含空白歌词且全部带和弦时，也应归类为 `chords-only`
