@@ -381,3 +381,12 @@
   - `src/pages/songs/[...slug].astro`
   - `src/components/ChordSheet.tsx`
   - `src/layouts/Layout.astro`
+
+### Step 042 — 将桌面端 transpose 工具也统一为右侧浮动样式
+- 时间：2026-04-05 19:xx Asia/Shanghai
+- 动作：取消桌面端横向工具栏，统一为与手机端一致的右侧垂直浮动工具条，仅保留顶部 key 信息
+- 原因：用户明确表示更喜欢手机端当前的 transpose 展示方式，希望桌面端也统一成这种感觉
+- 结果：桌面与手机的 key transpose 交互样式一致，界面更统一
+- 输出：
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`

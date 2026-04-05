@@ -25,33 +25,15 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
 
   return (
     <section className="chord-sheet-card">
-      <div className="toolbar desktop-toolbar">
+      <div className="toolbar">
         <div className="toolbar-group">
           <span className="label">Key</span>
           <strong>{displayKey}</strong>
           <span className="muted">原调 {originalKey}</span>
         </div>
-
-        <div className="toolbar-group">
-          <button type="button" onClick={() => setSemitones((v) => v - 1)}>-1</button>
-          <button type="button" onClick={() => setSemitones(0)}>Reset</button>
-          <button type="button" onClick={() => setSemitones((v) => v + 1)}>+1</button>
-          <span className="muted">Transpose: {semitones > 0 ? `+${semitones}` : semitones}</span>
-        </div>
-
-        <div className="toolbar-group">
-          <label>
-            <span className="label">显示</span>
-            <select value={accidentalMode} onChange={(e) => setAccidentalMode(e.target.value as AccidentalMode)}>
-              <option value="flat">降号优先</option>
-              <option value="sharp">升号优先</option>
-            </select>
-          </label>
-        </div>
-
       </div>
 
-      <div className="mobile-floating-toolbar" aria-label="Transpose controls">
+      <div className="floating-toolbar" aria-label="Transpose controls">
         <button type="button" onClick={() => setSemitones((v) => v + 1)}>+</button>
         <button type="button" onClick={() => setSemitones(0)}>0</button>
         <button type="button" onClick={() => setSemitones((v) => v - 1)}>-</button>
