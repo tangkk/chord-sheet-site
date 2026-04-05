@@ -79,6 +79,18 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
             );
           }
 
+          if (line.type === 'chords-only') {
+            return (
+              <div key={lineIndex} className="chords-only-line">
+                {line.chords.map((chord, chordIndex) => (
+                  <span key={`${lineIndex}-${chordIndex}`} className="chords-only-chip">
+                    {chord}
+                  </span>
+                ))}
+              </div>
+            );
+          }
+
           return (
             <div key={lineIndex} className="line">
               {line.segments.map((segment, segmentIndex) => (

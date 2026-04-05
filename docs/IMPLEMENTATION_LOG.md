@@ -233,3 +233,13 @@
 - 输出：
   - `src/pages/index.astro`
   - `src/pages/songs/[...slug].astro`
+
+### Step 026 — 为纯和弦行增加专门渲染样式
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：识别并专门渲染只有和弦、没有歌词的行
+- 原因：intro / instrumental / outro 这类段落不应沿用歌词行排版，和弦之间需要明显展开
+- 结果：纯和弦行会以横向展开的独立 chord row 样式显示
+- 输出：
+  - `src/lib/chord-sheet.ts`
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`

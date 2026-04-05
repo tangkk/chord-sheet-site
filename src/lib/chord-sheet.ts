@@ -7,6 +7,7 @@ export type ParsedLine =
   | { type: 'blank' }
   | { type: 'section'; text: string }
   | { type: 'alt'; text: string }
+  | { type: 'chords-only'; chords: string[] }
   | { type: 'segments'; segments: ParsedSegment[] };
 
 export function parseChordLine(line: string): ParsedLine {
@@ -22,6 +23,15 @@ export function parseChordLine(line: string): ParsedLine {
 
   if (/^[A-Za-z0-9 _-]+:$/.test(trimmed)) {
     return { type: 'section', text: trimmed.slice(0, -1) };
+  }
+
+  const chordOnlyCandidates = trimmed.split('|').flatMap((part) => part.trim().split(/\s+/)).filter(Boolean);
+  const isChordOnly =
+    chordOnlyCandidates.length > 0 &&
+    chordOnlyCandidates.every((token) => /^[A-G](?:#|b)?(?:[^\s|]*)$/.test(token));
+
+  if (isChordOnly) {
+    return { type: 'chords-only', chords: chordOnlyCandidates };
   }
   const segments: ParsedSegment[] = [];
   const regex = /\(([^)]+)\)/g;
