@@ -11,7 +11,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "normalize:sheet": "node scripts/normalize-chord-sheet.mjs",
-    "extract:pdf": "node scripts/extract-chord-sheet-from-pdf.mjs"
+    "extract:pdf": "node scripts/extract-chord-sheet-from-pdf.mjs",
+    "align:pdf": "node scripts/pdf-align-to-chordpro-draft.mjs",
+    "pdfplumber:md": "python3 scripts/pdfplumber-to-md.py"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.2",

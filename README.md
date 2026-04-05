@@ -105,9 +105,15 @@ docs/
 ### 工具与流程
 - 规范化工具已放入仓库：`scripts/normalize-chord-sheet.mjs`
 - PDF 提取工具已放入仓库：`scripts/extract-chord-sheet-from-pdf.mjs`
-- 这两类工具的定位都是半自动草案生成器，不是盲目全自动导入器
+- PDF 对位草案工具已放入仓库：`scripts/pdf-align-to-chordpro-draft.mjs`
+- `pdfplumber` 路线的 PDF → md 入口已纳入仓库流程（用于尽量保全 PDF 中的和弦 / 歌词 / 相对位置），正式命令为：`pnpm pdfplumber:md -- <pdf> --out <md> --title ... --artist ... --original-key ...`
+- 当前正式支持的入库入口有两类：
+  1. PDF（优先走 `pdfplumber` 对位路线）
+  2. 已带 `(Chord)` 位置信息的文本
+- 这几类工具的定位都是半自动草案生成器，不是盲目全自动导入器
 - 任何关于转换的新讨论，默认都要同步更新脚本 / 文档 / 实施日志
 - 默认发布流程：**本地先验收，再 push**
+- 默认验证方式优先使用 `pnpm build` / `pnpm preview`；除非正在调交互热更新，否则不要把 `pnpm dev` 当作最终验收依据
 
 ### 当前页面交互与展示方向
 - 歌曲页优先服务“看谱/弹奏”，不是内容卡片页

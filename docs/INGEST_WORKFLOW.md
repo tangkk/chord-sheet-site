@@ -69,11 +69,59 @@ cd ~/Documents/Projects/chord-sheet-site
 pnpm extract:pdf /path/to/song.pdf > /tmp/song-from-pdf.txt
 ```
 
+### PDF 对位草案（第一版）
+
+```bash
+cd ~/Documents/Projects/chord-sheet-site
+pnpm align:pdf /path/to/song.pdf > /tmp/song-aligned-draft.txt
+```
+
+### PDF → md（pdfplumber 路线，当前主推荐）
+
+适用场景：
+- 输入是 PDF
+- 原谱的和弦位置主要依赖横向版面
+- 目标是尽量保全每一个和弦、每一个字，以及它们的相对落点
+
+当前约定：
+1. PDF 入库优先走 `pdfplumber` 路线，而不是只靠 Ghostscript `txtwrite`
+2. `txtwrite` 可作为快速可读文本草案，但不是高精度对位的最终依据
+3. `pdfplumber` 负责读取字符级坐标 / 行坐标 / 和弦列位置
+4. 生成的 md 默认视为“坐标驱动草案”，仍需本地验收
+5. 若目标是尽量接近 PDF 页面视觉效果，后续可继续增强渲染层，而不只停留在普通文本流
+
 建议流程：
-1. 先用 `extract:pdf` 提取可读文本
-2. 人工查看位置/空格是否仍足够可靠
-3. 若对位信息仍主要体现在“和弦行 + 歌词行”的关系中，可先直接入库为可审阅版本
-4. 再决定是否继续进入 `normalize:sheet` 或后续更精细的括号化处理
+1. 运行正式脚本入口：
+
+```bash
+cd ~/Documents/Projects/chord-sheet-site
+pnpm pdfplumber:md -- \
+  /path/to/song.pdf \
+  --out src/data/song-slug.md \
+  --title "歌名" \
+  --artist "歌手" \
+  --language zh \
+  --original-key C \
+  --tags 国语 流行 歌手名 \
+  --debug-json tmp/song-slug-pdfplumber-debug.json
+```
+
+2. 保证：和弦不丢、字不丢、行结构不丢
+3. 将结果整理为项目 md（必要时做少量人工精修）
+4. 本地用 `pnpm build` / `pnpm preview` 验收
+5. 验收通过后再决定是否 push
+
+---
+
+## 当前正式入库入口
+
+### 入口 1：PDF
+- 优先走 `pdfplumber` 对位路线
+- 适合 Notes / PDF 导出版、视觉对位明显的原稿
+
+### 入口 2：带 `(Chord)` 位置信息的文本
+- 直接进入 md 整理 / normalize 流程
+- 适合原始输入已经明确表达和弦压字位置的情况
 
 ## 当前限制
 
@@ -90,6 +138,18 @@ pnpm extract:pdf /path/to/song.pdf > /tmp/song-from-pdf.txt
 - 右侧垂直 transpose 工具条
 - 纯音乐段落的可读性
 - 长句是否需要横向滚动
+
+### 重要约定：避免反复使用不稳定的 dev 验收
+- `pnpm dev` 主要用于开发期快速改动和热更新观察
+- 最终验收默认优先使用：
+
+```bash
+pnpm build
+pnpm preview
+```
+
+- 若首页或路由在 `pnpm dev` 中再次出现 Vite 侧异常（例如 `TypeError: Cannot read properties of undefined (reading 'call')`），不要把它当作已发布结果的判定依据
+- 对外或阶段性确认前，必须以 `build + preview` 结果为准
 
 ## 建议流程
 

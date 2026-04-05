@@ -453,3 +453,54 @@
 - 结果：歌曲 metadata 已与真实信息对齐
 - 输出：
   - `src/data/heidongli.md`
+
+### Step 050 — 增加 PDF 对位草案工具第一版
+- 时间：2026-04-05 19:xx Asia/Shanghai
+- 动作：新增 `scripts/pdf-align-to-chordpro-draft.mjs`，尝试根据 PDF 提取结果中的横向位置恢复括号草案
+- 原因：用户指出《黑洞裡》当前版本与 PDF 中的和弦位置不一致，需要把 PDF 里的视觉对位信息进一步转成可用草案
+- 结果：仓库已具备第一版“PDF → 对位草案”能力，可用来验证位置恢复是否足够可靠
+- 输出：
+  - `scripts/pdf-align-to-chordpro-draft.mjs`
+  - `package.json`
+  - `README.md`
+  - `docs/INGEST_WORKFLOW.md`
+
+### Step 051 — 固化本地验收优先级，避免反复被 dev 异常干扰
+- 时间：2026-04-05 19:xx Asia/Shanghai
+- 动作：把“最终验收默认用 `pnpm build` / `pnpm preview`，不要反复以 `pnpm dev` 报错判断页面状态”写入 README 与入库工作流文档
+- 原因：用户反馈首页 Vite 异常问题已经出现多次，需要形成明确约定，避免今后重复踩坑
+- 结果：本地验证流程已明确区分开发热更新与最终验收
+- 输出：
+  - `README.md`
+  - `docs/INGEST_WORKFLOW.md`
+
+### Step 052 — 将 pdfplumber 路线落实为正式 PDF 入库入口
+- 时间：2026-04-05 20:xx Asia/Shanghai
+- 动作：把基于 `pdfplumber` 的 PDF → md 转换流程补入 README 与入库工作流，并明确当前正式支持两类入库入口：PDF、带 `(Chord)` 位置信息的文本
+- 原因：用户确认当前 `pdfplumber` 结果已经足够接近，要求将整套流程沉淀到代码仓库中，作为正式入库入口之一
+- 结果：仓库文档已明确 PDF 入库优先走 `pdfplumber` 对位路线，Ghostscript `txtwrite` 降级为快速文本草案辅助
+- 输出：
+  - `README.md`
+  - `docs/INGEST_WORKFLOW.md`
+
+### Step 053 — 将 pdfplumber PDF → md 全流程固化为脚本入口
+- 时间：2026-04-05 20:xx Asia/Shanghai
+- 动作：新增 `scripts/pdfplumber-to-md.py` 并在 `package.json` 中挂出 `pnpm pdfplumber:md` 命令，用于把 PDF 直接转换成项目 md 草案
+- 原因：用户要求把“整个基于 pdfplumber 把 PDF 转成 md 的全过程”落实成正式脚本入口，而不是只停留在临时实验与文档说明
+- 结果：仓库现在具备可直接执行的 `pdfplumber` PDF → md 命令行入口，可产出 md 与可选 debug json
+- 输出：
+  - `scripts/pdfplumber-to-md.py`
+  - `package.json`
+  - `README.md`
+  - `docs/INGEST_WORKFLOW.md`
+
+### Step 054 — 统一语言显示为粤语 / 国语 / 英语，并再次收紧首页渲染写法
+- 时间：2026-04-05 20:xx Asia/Shanghai
+- 动作：新增语言归一化工具，将 `zh` 映射为 `国语`、`yue` 映射为 `粤语`、`en` 映射为 `英语`，同时简化首页与歌曲页的语言渲染逻辑
+- 原因：用户要求后续语言只保留“粤语 / 国语 / 英语”三种选择，且首页再次出现 TypeError，需要继续减少不稳定写法
+- 结果：语言标签展示已统一，首页/歌曲页改为更直接的归一化输出
+- 输出：
+  - `src/lib/language.ts`
+  - `src/pages/index.astro`
+  - `src/pages/songs/[...slug].astro`
+  - `docs/CONTENT_FORMAT.md`
