@@ -38,10 +38,10 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     --panel: #fcfcfc;
     --panel-border: #e7e7e7;
     --text: #111111;
-    --muted: #667085;
-    --accent: #0b57d0;
-    --accent-soft: #eef4ff;
-    --chord: #c76616;
+    --muted: #6b7280;
+    --accent: #111111;
+    --accent-soft: #f3f4f6;
+    --chord: #222222;
     --shadow: 0 8px 24px rgba(17, 17, 17, 0.04);
   }
 
@@ -234,21 +234,29 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
 
   .back-link {
     display: inline-block;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
+    color: var(--muted);
+    font-size: 0.94rem;
+  }
+
+  .back-link:hover {
+    color: var(--text);
   }
 
   .song-hero {
-    padding: 0;
-    margin-bottom: 4px;
+    padding: 0 0 16px;
+    margin-bottom: 18px;
     background: transparent;
     border: 0;
+    border-bottom: 1px solid var(--panel-border);
     box-shadow: none;
   }
 
   .song-title {
-    margin: 0 0 4px;
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin: 0 0 6px;
+    font-size: clamp(1.8rem, 3.4vw, 2.4rem);
     line-height: 1.08;
+    letter-spacing: -0.02em;
   }
 
   .chord-sheet-card {
@@ -262,12 +270,12 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
   .toolbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 12px;
+    gap: 10px 12px;
     align-items: center;
     justify-content: space-between;
-    padding: 0 0 8px;
-    margin: 0 0 8px;
-    border-bottom: 1px solid #e8eef5;
+    padding: 0 0 12px;
+    margin: 0 0 14px;
+    border-bottom: 1px solid var(--panel-border);
   }
 
   .toolbar-readout {
@@ -276,13 +284,13 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
   }
 
   .toolbar-key-value {
-    font-size: 0.94rem;
+    font-size: 0.96rem;
     font-weight: 700;
     line-height: 1;
   }
 
   .toolbar-key-origin {
-    font-size: 0.74rem;
+    font-size: 0.76rem;
     color: var(--muted);
     line-height: 1;
   }
@@ -294,10 +302,11 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
   .toolbar button {
     min-width: 34px;
     min-height: 30px;
-    padding: 0 8px;
+    padding: 0 10px;
     border-radius: 10px;
     font-size: 0.92rem;
     font-weight: 700;
+    background: #fff;
   }
 
   .toolbar-group {
@@ -327,7 +336,7 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
 
   button:hover,
   select:hover {
-    border-color: var(--accent);
+    border-color: #b9b9b9;
     cursor: pointer;
   }
 
@@ -352,11 +361,11 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
   }
 
   .section-line {
-    margin: 3px 0 0;
-    color: var(--accent);
-    font-size: 0.8rem;
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 

@@ -16,11 +16,6 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_UR
   </header>
 
   <section class="home-section">
-    <div class="home-section-head">
-      <h2 class="home-section-title">Songs</h2>
-      <p class="home-section-meta">共 {songs.length} 首</p>
-    </div>
-
     <section class="song-flat-list card home-song-list-card">
       {songs.map((song) => {
         const languageLabel = normalizeLanguage(song.language);
