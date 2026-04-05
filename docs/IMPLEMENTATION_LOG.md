@@ -504,3 +504,25 @@
   - `src/pages/index.astro`
   - `src/pages/songs/[...slug].astro`
   - `docs/CONTENT_FORMAT.md`
+
+### Step 055 — 将 transpose 工具改回标题区横向工具条
+- 时间：2026-04-05 20:xx Asia/Shanghai
+- 动作：移除右侧悬浮 transpose 工具条，改为标题区附近的横向工具条，并保留当前 key / 原调显示
+- 原因：用户确认转 key 工具不应悬浮，而应放在标题栏附近横向展示，尺寸保持紧凑
+- 结果：歌曲页交互方向已回到标题区横向工具条方案
+- 输出：
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`
+  - `README.md`
+
+### Step 056 — 为移动端长行增加阅读优先版渲染
+- 时间：2026-04-05 20:xx Asia/Shanghai
+- 动作：对较长歌词行在移动端启用阅读优先渲染，允许其换成更易读的分段布局，而桌面端继续优先保留对位
+- 原因：用户指出《黑洞裡》这类长行曲谱在手机端容易被截断，决定移动端改为阅读优先版
+- 结果：同一份 md 源数据现可在桌面端与移动端采用不同展示策略，以兼顾对位与可读性
+- 输出：
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`
+  - `README.md`
+  - `docs/CONTENT_FORMAT.md`
+  - `docs/INGEST_WORKFLOW.md`
