@@ -138,19 +138,31 @@
 - 输出：
   - Git remote `origin`
 
-### Step 015 — 固定 transpose 默认 key 命名顺序并修正纯和弦行重复转调风险
+### Step 015 — 固定 transpose 默认 key 顺序并修正纯和弦行重复转调风险
 - 时间：2026-04-06 00:xx Asia/Shanghai
-- 动作：将页面默认 key 命名顺序固定为 `C → Db → D → Eb → E → F → F# → G → Ab → A → Bb → B`，不再受当前 key 影响；同时调整渲染链路，避免纯和弦行在解析阶段被重复 transpose
+- 动作：将页面默认 key 顺序固定为 `C → Db → D → Eb → E → F → F# → G → Ab → A → Bb → B`，不再受当前 key 影响；同时调整渲染链路，避免纯和弦行在解析阶段被重复 transpose
 - 原因：现有页面默认命名顺序会被当前 accidental mode 带偏，实际表现更像整套 sharp spelling，不符合产品预期；此外纯和弦行存在二次转调风险
 - 结果：
   - 用户不切换 `♭ / ♯` 按钮时，页面 key 顺序稳定且可预期
-  - `♭ / ♯` 按钮改为只负责当前显示命名体系切换
   - `chords-only` 行不再在“文本已转调后”再被解析器额外 transpose 一次
 - 输出：
   - `src/lib/chords.ts`
   - `src/components/ChordSheet.tsx`
   - `docs/CONTENT_FORMAT.md`
 - 验证：`pnpm build` 通过
+
+### Step 016 — 调整默认升降号逻辑为“顺序固定，但命名跟随目标 key”
+- 时间：2026-04-06 00:xx Asia/Shanghai
+- 动作：修正上一轮把默认 accidental mode 直接固定成 flat 的实现，改为：key 的 12 个位置顺序固定，但每个位置的默认 spelling 由目标 key 自身决定
+- 原因：用户需要的是“默认顺序固定”，不是“全部默认显示为降号”；例如 `F#` 应继续默认显示为 `F#`，而不是被压成 `Gb`
+- 结果：
+  - 默认顺序仍然稳定
+  - 默认 spelling 恢复为按目标 key 选择更自然的命名
+  - `♭ / ♯` 按钮显示会跟随当前目标 key 的默认命名，而不是整站统一全降
+- 输出：
+  - `src/lib/chords.ts`
+  - `src/components/ChordSheet.tsx`
+  - `docs/CONTENT_FORMAT.md`
 
 ### Step 015 — 切换 remote 到 SSH 并执行首次 push
 - 时间：2026-04-05 17:xx Asia/Shanghai
