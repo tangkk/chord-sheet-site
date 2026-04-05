@@ -17,7 +17,7 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
     [text, semitones, accidentalMode],
   );
 
-  const parsed = useMemo(() => parseChordSheet(renderedText), [renderedText]);
+  const parsed = useMemo(() => parseChordSheet(renderedText, semitones, accidentalMode), [renderedText, semitones, accidentalMode]);
   const displayKey = useMemo(
     () => transposeKey(originalKey, semitones, accidentalMode),
     [originalKey, semitones, accidentalMode],
@@ -26,6 +26,10 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
   return (
     <section className="chord-sheet-card">
       <div className="floating-toolbar" aria-label="Transpose controls">
+        <div className="floating-key-readout">
+          <span className="floating-key-value">{displayKey}</span>
+          <span className="floating-key-origin">原调 {originalKey}</span>
+        </div>
         <button type="button" onClick={() => setSemitones((v) => v + 1)}>+</button>
         <button type="button" onClick={() => setSemitones(0)}>0</button>
         <button type="button" onClick={() => setSemitones((v) => v - 1)}>-</button>

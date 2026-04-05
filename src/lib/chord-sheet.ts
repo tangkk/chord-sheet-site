@@ -1,3 +1,5 @@
+import { transposeKey, type AccidentalMode } from './chords';
+
 export type ParsedSegment = {
   chord: string | null;
   lyric: string;
@@ -90,6 +92,19 @@ export function parseChordLine(line: string): ParsedLine {
   return { type: 'segments', segments };
 }
 
-export function parseChordSheet(text: string): ParsedLine[] {
-  return text.split(/\r?\n/).map(parseChordLine);
+export function parseChordSheet(text: string, semitones = 0, accidentalMode: AccidentalMode = 'flat'): ParsedLine[] {
+  return text
+    .split(/\r?\n/)
+    .map(parseChordLine)
+    .map((line) => {
+      if (line.type !== 'chords-only' || semitones === 0) return line;
+      return {
+        ...line,
+        tokens: line.tokens.map((token) =>
+          token.type === 'chord'
+            ? { type: 'chord' as const, value: transposeKey(token.value, semitones, accidentalMode) }
+            : token,
+        ),
+      };
+    });
 }

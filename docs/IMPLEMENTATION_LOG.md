@@ -398,3 +398,13 @@
 - 结果：页面头部信息更简洁，正文更早进入视野
 - 输出：
   - `src/components/ChordSheet.tsx`
+
+### Step 044 — 在浮动转调工具中显示当前 key，并让纯音乐段也随转调变化
+- 时间：2026-04-05 19:xx Asia/Shanghai
+- 动作：为右侧浮动工具条加入当前 key / 原调展示，并让 `chords-only` 纯音乐段的和弦也参与 transpose
+- 原因：用户希望转调后的 key 有明确显示位置，同时发现当前纯音乐段未跟随转调变化
+- 结果：转调状态在工具条中可见，纯音乐段与正文和弦的转调行为已统一
+- 输出：
+  - `src/components/ChordSheet.tsx`
+  - `src/lib/chord-sheet.ts`
+  - `src/layouts/Layout.astro`
