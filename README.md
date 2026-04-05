@@ -1,46 +1,63 @@
-# Astro Starter Kit: Basics
+# Chord Sheet Site
 
-```sh
-pnpm create astro@latest -- --template basics
+一个给 KT 自己长期维护的和弦谱静态网站项目。
+
+## 项目目标
+
+- 维护个人流行曲和弦谱，当前以粤语歌为主
+- 继续沿用 `(Chord)` 内嵌歌词的轻量录入格式
+- 在前端自动排版为“和弦在上、歌词在下”的阅读形式
+- 支持原调存储、任意升降调 transpose
+- 托管到 GitHub，优先兼容 GitHub Pages
+- 从第一天开始保留完整项目文档，方便长期维护
+
+## 当前状态
+
+首版 MVP 开发中。
+
+已完成内容见：
+
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/ARCHITECTURE.md`
+- `docs/CONTENT_FORMAT.md`
+- `docs/ROADMAP.md`
+- `docs/DECISIONS.md`
+- `docs/DEPLOYMENT.md`
+
+## 本地开发
+
+```bash
+cd ~/Documents/Projects/chord-sheet-site
+pnpm dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 构建
 
-## 🚀 Project Structure
+```bash
+pnpm build
+```
 
-Inside of your Astro project, you'll see the following folders and files:
+## 计划中的部署
+
+- GitHub Pages
+- 后续可选自定义域名
+
+## 目录结构
 
 ```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+src/
+  components/
+  content/
+  layouts/
+  lib/
+  pages/
+docs/
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 维护原则
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+1. 任何 solid step 都要落文档
+2. 内容格式优先稳定，不轻易破坏兼容性
+3. 先做静态站 MVP，再逐步增强搜索、筛选、打印、收藏等功能
+4. 原始和弦谱文本应尽量保持易写、易读、易迁移
+```

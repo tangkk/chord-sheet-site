@@ -1,23 +1,261 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Chord Sheet Site',
+  description = '一个给自己长期维护的和弦谱网站',
+} = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="page-shell">
+      <slot />
+    </div>
+  </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style is:global>
+  :root {
+    color-scheme: dark;
+    --bg: #0f1115;
+    --bg-soft: #171a21;
+    --panel: #1c212b;
+    --panel-border: #303747;
+    --text: #edf2f7;
+    --muted: #98a2b3;
+    --accent: #86b7ff;
+    --accent-soft: #20304f;
+    --chord: #ffd166;
+    --shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: radial-gradient(circle at top, #1a2233 0%, var(--bg) 45%);
+    color: var(--text);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .page-shell {
+    width: min(1080px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 32px 0 64px;
+  }
+
+  .site-header {
+    margin-bottom: 28px;
+  }
+
+  .site-title {
+    margin: 0 0 8px;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+  }
+
+  .site-subtitle,
+  .muted {
+    color: var(--muted);
+  }
+
+  .card {
+    background: color-mix(in srgb, var(--panel) 88%, transparent);
+    border: 1px solid var(--panel-border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+  }
+
+  .song-list {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .song-card {
+    padding: 20px;
+  }
+
+  .song-card h2,
+  .song-card h3 {
+    margin: 0 0 10px;
+  }
+
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: #cfe0ff;
+    font-size: 0.875rem;
+  }
+
+  .meta-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    margin: 16px 0 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 18px;
+  }
+
+  .song-hero {
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .song-title {
+    margin: 0 0 8px;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+  }
+
+  .chord-sheet-card {
+    padding: 20px;
+    background: color-mix(in srgb, var(--panel) 92%, transparent);
+    border: 1px solid var(--panel-border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .label {
+    color: var(--muted);
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  button,
+  select {
+    background: #121722;
+    color: var(--text);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font: inherit;
+  }
+
+  button:hover,
+  select:hover {
+    border-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-x: auto;
+  }
+
+  .line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    row-gap: 10px;
+  }
+
+  .line.blank {
+    min-height: 20px;
+  }
+
+  .segment {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    white-space: pre;
+  }
+
+  .chord {
+    min-height: 1.2em;
+    margin-bottom: 2px;
+    color: var(--chord);
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .lyric {
+    font-size: 1.08rem;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 720px) {
+    .page-shell {
+      width: min(100% - 20px, 1080px);
+      padding-top: 20px;
+    }
+
+    .chord-sheet-card,
+    .song-hero,
+    .song-card {
+      padding: 16px;
+    }
+
+    .toolbar {
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .lyric {
+      font-size: 1rem;
+    }
+  }
 </style>

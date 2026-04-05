@@ -1,11 +1,40 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { getSongs } from '../lib/song-loader';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const songs = getSongs().sort((a, b) => a.title.localeCompare(b.title, 'zh-Hans-CN'));
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Chord Sheet Site" description="KT 的个人和弦谱库">
+  <header class="site-header">
+    <p class="site-subtitle">KT 的个人和弦谱库</p>
+    <h1 class="site-title">Chord Sheet Site</h1>
+    <p class="site-subtitle">
+      继续沿用 <code>(Chord)</code> 内嵌格式，支持自动排版与 transpose。当前先做一个干净、能长期维护的 MVP。
+    </p>
+  </header>
+
+  <section class="song-list">
+    {songs.map((song) => (
+      <article class="song-card card">
+        <h2>
+          <a href={`${baseUrl}songs/${song.slug}/`}>{song.title}</a>
+        </h2>
+        <div class="muted">{song.artist}</div>
+        <div class="meta-grid">
+          <span>原调：{song.originalKey}</span>
+          {song.language ? <span>语言：{song.language}</span> : null}
+          {typeof song.capo === 'number' ? <span>Capo：{song.capo}</span> : null}
+        </div>
+        {song.tags.length > 0 ? (
+          <div class="tag-row">
+            {song.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        ) : null}
+      </article>
+    ))}
+  </section>
 </Layout>
