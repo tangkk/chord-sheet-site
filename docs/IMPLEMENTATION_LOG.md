@@ -132,8 +132,25 @@
 
 ### Step 014 — 连接 GitHub 仓库 remote
 - 时间：2026-04-05 17:xx Asia/Shanghai
-- 动作：为本地仓库添加 `origin`，指向 `https://github.com/tangkk/chord-sheet-site.git`
+- 动作：为本地仓库添加 `origin`，初始指向 `https://github.com/tangkk/chord-sheet-site.git`
 - 原因：用户已创建远端仓库，部署打通前必须先让本地仓库与 GitHub 仓库建立连接
 - 结果：本地仓库已可向 GitHub 仓库执行后续 push
 - 输出：
   - Git remote `origin`
+
+### Step 015 — 切换 remote 到 SSH 并执行首次 push
+- 时间：2026-04-05 17:xx Asia/Shanghai
+- 动作：由于 HTTPS push 缺少 CLI 凭据，改用 SSH remote `git@github.com:tangkk/chord-sheet-site.git` 并执行首次推送
+- 原因：用户确认本机已配置 GitHub SSH key；SSH 是当前最快且最稳的认证方式
+- 结果：若 push 成功，GitHub Actions 将开始自动部署 Pages
+- 输出：
+  - remote `origin` 已切换到 SSH
+  - 首次 push 状态已执行
+
+### Step 016 — 修复 GitHub Actions 中 pnpm 版本冲突
+- 时间：2026-04-05 17:xx Asia/Shanghai
+- 动作：移除 workflow 中 `pnpm/action-setup` 的显式 `version: 10`
+- 原因：GitHub Actions 同时读取到了 workflow 里的 pnpm 版本与 `package.json` 的 `packageManager` 版本，导致冲突报错
+- 结果：workflow 将改为直接使用 `package.json` 中声明的 pnpm 版本
+- 输出：
+  - `.github/workflows/deploy.yml`
