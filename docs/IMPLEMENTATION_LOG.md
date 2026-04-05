@@ -360,3 +360,13 @@
 - 输出：
   - `src/components/ChordSheet.tsx`
   - `src/layouts/Layout.astro`
+
+### Step 040 — 为手机端增加右侧垂直 transpose 工具条
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：保留桌面端顶部工具栏，同时在手机端隐藏顶部工具栏并改为右侧垂直浮动控制条
+- 原因：用户在手机实测中反馈顶部调 key 工具过于占地方，希望改为放在屏幕最右边垂直排列
+- 结果：手机端首屏正文占比提升，transpose 控件更贴近演奏查看场景
+- 输出：
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`
+  - `docs/INGEST_WORKFLOW.md`

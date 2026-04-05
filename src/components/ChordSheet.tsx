@@ -25,7 +25,7 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
 
   return (
     <section className="chord-sheet-card">
-      <div className="toolbar">
+      <div className="toolbar desktop-toolbar">
         <div className="toolbar-group">
           <span className="label">Key</span>
           <strong>{displayKey}</strong>
@@ -55,6 +55,15 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
             <strong>{capo}</strong>
           </div>
         ) : null}
+      </div>
+
+      <div className="mobile-floating-toolbar" aria-label="Transpose controls">
+        <button type="button" onClick={() => setSemitones((v) => v + 1)}>+</button>
+        <button type="button" onClick={() => setSemitones(0)}>0</button>
+        <button type="button" onClick={() => setSemitones((v) => v - 1)}>-</button>
+        <button type="button" onClick={() => setAccidentalMode((mode) => (mode === 'flat' ? 'sharp' : 'flat'))}>
+          {accidentalMode === 'flat' ? '♭' : '♯'}
+        </button>
       </div>
 
       <div className="sheet">

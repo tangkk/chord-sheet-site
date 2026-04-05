@@ -173,6 +173,10 @@ const {
     border-bottom: 1px solid #e8eef5;
   }
 
+  .mobile-floating-toolbar {
+    display: none;
+  }
+
   .toolbar-group {
     display: flex;
     align-items: center;
@@ -309,12 +313,42 @@ const {
       width: min(100% - 14px, 1180px);
       padding-top: 14px;
       padding-bottom: 24px;
+      padding-right: 54px;
     }
 
     .chord-sheet-card,
     .song-hero,
     .song-card {
       padding: 12px;
+    }
+
+    .desktop-toolbar {
+      display: none;
+    }
+
+    .mobile-floating-toolbar {
+      position: fixed;
+      right: 8px;
+      top: 96px;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid #dbe5f0;
+      border-radius: 14px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 6px 18px rgba(58, 84, 120, 0.12);
+    }
+
+    .mobile-floating-toolbar button {
+      min-width: 34px;
+      min-height: 34px;
+      padding: 0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
     }
 
     .toolbar {
