@@ -138,6 +138,20 @@
 - 输出：
   - Git remote `origin`
 
+### Step 015 — 固定 transpose 默认 key 命名顺序并修正纯和弦行重复转调风险
+- 时间：2026-04-06 00:xx Asia/Shanghai
+- 动作：将页面默认 key 命名顺序固定为 `C → Db → D → Eb → E → F → F# → G → Ab → A → Bb → B`，不再受当前 key 影响；同时调整渲染链路，避免纯和弦行在解析阶段被重复 transpose
+- 原因：现有页面默认命名顺序会被当前 accidental mode 带偏，实际表现更像整套 sharp spelling，不符合产品预期；此外纯和弦行存在二次转调风险
+- 结果：
+  - 用户不切换 `♭ / ♯` 按钮时，页面 key 顺序稳定且可预期
+  - `♭ / ♯` 按钮改为只负责当前显示命名体系切换
+  - `chords-only` 行不再在“文本已转调后”再被解析器额外 transpose 一次
+- 输出：
+  - `src/lib/chords.ts`
+  - `src/components/ChordSheet.tsx`
+  - `docs/CONTENT_FORMAT.md`
+- 验证：`pnpm build` 通过
+
 ### Step 015 — 切换 remote 到 SSH 并执行首次 push
 - 时间：2026-04-05 17:xx Asia/Shanghai
 - 动作：由于 HTTPS push 缺少 CLI 凭据，改用 SSH remote `git@github.com:tangkk/chord-sheet-site.git` 并执行首次推送
