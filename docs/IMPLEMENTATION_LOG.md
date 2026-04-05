@@ -334,3 +334,11 @@
 - 输出：
   - `src/pages/songs/[...slug].astro`
   - `src/layouts/Layout.astro`
+
+### Step 037 — 修复短歌词下密集和弦的重叠问题
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：让每个和弦-歌词 segment 以自身最大内容宽度占位，避免短歌词被长和弦挤压后相邻和弦视觉粘连
+- 原因：像“多 / Abm7b5 / 细致新 / Db / 鲜”这类短歌词+密集和弦的句子，若只按歌词宽度排版，会导致和弦挤在一起
+- 结果：密集和弦在短歌词场景下会有更稳定的横向展开空间
+- 输出：
+  - `src/layouts/Layout.astro`
