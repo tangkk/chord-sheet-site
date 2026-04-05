@@ -99,12 +99,17 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
 
           return (
             <div key={lineIndex} className="line">
-              {line.segments.map((segment, segmentIndex) => (
-                <span key={`${lineIndex}-${segmentIndex}`} className="segment">
-                  <span className="chord">{segment.chord ?? '\u00A0'}</span>
-                  <span className={`lyric${segment.lyric === '' ? ' spacer' : ''}`}>{segment.lyric || '\u00A0'}</span>
-                </span>
-              ))}
+              {line.segments.map((segment, segmentIndex) => {
+                const chordLength = (segment.chord ?? '').length;
+                const lyricLength = segment.lyric.trim().length;
+                const compactNeedsBoost = chordLength >= 6 && lyricLength <= 2;
+                return (
+                  <span key={`${lineIndex}-${segmentIndex}`} className={`segment${compactNeedsBoost ? ' dense-short' : ''}`}>
+                    <span className="chord">{segment.chord ?? '\u00A0'}</span>
+                    <span className={`lyric${segment.lyric === '' ? ' spacer' : ''}`}>{segment.lyric || '\u00A0'}</span>
+                  </span>
+                );
+              })}
             </div>
           );
         })}

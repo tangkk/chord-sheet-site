@@ -342,3 +342,12 @@
 - 结果：密集和弦在短歌词场景下会有更稳定的横向展开空间
 - 输出：
   - `src/layouts/Layout.astro`
+
+### Step 038 — 为“短歌词 + 长和弦”场景增加额外占位保护
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：在渲染阶段识别长和弦配短歌词的 segment，并追加更大的最小宽度
+- 原因：用户反馈像“多细致新鲜”这一句仍未出现明显改善，说明仅靠常规 max-content 占位还不够
+- 结果：极短歌词下的长和弦会获得额外横向空间，减少视觉粘连
+- 输出：
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`

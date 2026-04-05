@@ -31,6 +31,7 @@ const {
 <style is:global>
   :root {
     color-scheme: light;
+    --dense-chord-len: 6;
     --bg: #f6f8fb;
     --bg-soft: #eef3f8;
     --panel: #ffffff;
@@ -274,6 +275,10 @@ const {
     align-items: flex-start;
     white-space: pre;
     min-width: max-content;
+  }
+
+  .segment.dense-short {
+    min-width: 5.4rem;
   }
 
   .chord {
