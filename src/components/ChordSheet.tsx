@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { parseChordSheet } from '../lib/chord-sheet';
-import { transposeChordText, transposeKey, type AccidentalMode } from '../lib/chords';
+import { getDefaultAccidentalMode, transposeChordText, transposeKey, type AccidentalMode } from '../lib/chords';
 
 type Props = {
   text: string;
@@ -10,7 +10,7 @@ type Props = {
 
 export default function ChordSheet({ text, originalKey, capo }: Props) {
   const [semitones, setSemitones] = useState(0);
-  const [accidentalMode, setAccidentalMode] = useState<AccidentalMode>('flat');
+  const [accidentalMode, setAccidentalMode] = useState<AccidentalMode>(() => getDefaultAccidentalMode(originalKey));
 
   const renderedText = useMemo(
     () => transposeChordText(text, semitones, accidentalMode),
@@ -32,7 +32,7 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
         </div>
         <div className="toolbar-group toolbar-buttons">
           <button type="button" onClick={() => setSemitones((v) => v - 1)}>-</button>
-          <button type="button" onClick={() => setSemitones(0)}>0</button>
+          <button type="button" onClick={() => setSemitones(0)}>{semitones}</button>
           <button type="button" onClick={() => setSemitones((v) => v + 1)}>+</button>
           <button type="button" onClick={() => setAccidentalMode((mode) => (mode === 'flat' ? 'sharp' : 'flat'))}>
             {accidentalMode === 'flat' ? '♭' : '♯'}
