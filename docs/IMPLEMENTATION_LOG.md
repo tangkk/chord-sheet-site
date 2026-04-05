@@ -154,3 +154,13 @@
 - 结果：workflow 将改为直接使用 `package.json` 中声明的 pnpm 版本
 - 输出：
   - `.github/workflows/deploy.yml`
+
+### Step 017 — 将用户称呼从 “KT” 调整为 “tangkk”
+- 时间：2026-04-05 17:xx Asia/Shanghai
+- 动作：将当前项目中的用户可见文案，以及工作区中的称呼偏好，从 `KT` 改为 `tangkk`
+- 原因：用户明确表示不希望被称为 `KT`
+- 结果：当前项目页面文案与长期身份文件已同步改用 `tangkk`
+- 输出：
+  - `src/pages/index.astro`
+  - `README.md`
+  - `~/.openclaw/workspace/USER.md`
