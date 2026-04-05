@@ -272,3 +272,13 @@
 - 输出：
   - `src/data/jinye-meiyou-feng.md`
   - `docs/CONTENT_FORMAT.md`
+
+### Step 030 — 将 Notes 原文规范化工具纳入代码仓库
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：新增仓库内脚本 `scripts/normalize-chord-sheet.mjs` 与入库工作流文档
+- 原因：用户明确要求把“原始文本 → chord-sheet-site md 草案”的工具放进代码仓库，而不是只保留为临时人工流程
+- 结果：仓库已具备第一版半自动规范化工具与对应文档说明
+- 输出：
+  - `scripts/normalize-chord-sheet.mjs`
+  - `docs/INGEST_WORKFLOW.md`
+  - `package.json`
