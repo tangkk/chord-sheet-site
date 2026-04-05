@@ -67,4 +67,6 @@ pnpm normalize:sheet /path/to/raw.txt "今夜没有风" "梁咏琪" "A" > /tmp/j
 2. 保存为临时 txt 文件
 3. 运行脚本生成 md 草案
 4. 人工检查 warning 与格式
-5. 确认后再入库到 `src/data/*.md`
+5. 入库到 `src/data/*.md`
+6. **本地先验收（`pnpm dev` 或 `pnpm preview`）**
+7. 确认无误后再 commit / push

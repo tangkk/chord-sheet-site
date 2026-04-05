@@ -32,6 +32,12 @@ cd ~/Documents/Projects/chord-sheet-site
 pnpm dev
 ```
 
+## 验收与发布约定
+
+- 默认流程：**本地先验收，再 push**
+- 调整样式、渲染规则、歌曲入库后，优先通过本地网页确认效果
+- 确认无误后，再 commit / push 到 GitHub Pages
+
 ## 构建
 
 ```bash

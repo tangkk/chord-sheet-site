@@ -307,3 +307,21 @@
 - 结果：曲谱页改为更接近“演奏视图”的紧凑排版
 - 输出：
   - `src/layouts/Layout.astro`
+
+### Step 034 — 明确“本地先验收、再 push”为固定流程
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：将本地验收优先的发布流程写入 README 与入库工作流文档
+- 原因：用户明确要求不要每次依赖 github.io 验证，而应本地先确认效果
+- 结果：项目文档已固定“本地先验收、再 push”的工作方式
+- 输出：
+  - `README.md`
+  - `docs/INGEST_WORKFLOW.md`
+
+### Step 035 — 收敛标题、标签与纯音乐段视觉样式
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：让纯音乐段和弦字号与正文和弦一致，移除 song hero 卡片化样式，并去掉 tag 的框状视觉
+- 原因：用户指出当前纯音乐段和弦偏大、标题单独成块浪费空间、标签框样式难看
+- 结果：页面顶部与纯音乐段样式更统一、更省空间、更清爽
+- 输出：
+  - `src/layouts/Layout.astro`
+  - `docs/CONTENT_FORMAT.md`
