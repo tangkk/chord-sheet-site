@@ -201,7 +201,7 @@ const {
   .sheet {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     overflow-x: auto;
   }
 
@@ -209,15 +209,15 @@ const {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    row-gap: 10px;
+    row-gap: 6px;
   }
 
   .line.blank {
-    min-height: 20px;
+    min-height: 10px;
   }
 
   .section-line {
-    margin: 8px 0 2px;
+    margin: 4px 0 0;
     color: var(--accent);
     font-size: 0.88rem;
     font-weight: 700;
@@ -227,18 +227,19 @@ const {
 
   .alt-line {
     color: var(--muted);
-    font-size: 0.96rem;
-    line-height: 1.55;
+    font-size: 0.94rem;
+    line-height: 1.4;
     padding-left: 2px;
     font-style: italic;
+    margin-top: -2px;
   }
 
   .chords-only-line {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 12px;
+    gap: 6px 10px;
     align-items: center;
-    padding: 2px 0 4px;
+    padding: 0;
   }
 
   .chords-only-chip {
@@ -269,17 +270,17 @@ const {
   }
 
   .chord {
-    min-height: 1.2em;
-    margin-bottom: 2px;
+    min-height: 1.05em;
+    margin-bottom: 1px;
     color: var(--chord);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0.01em;
   }
 
   .lyric {
-    font-size: 1.08rem;
-    line-height: 1.65;
+    font-size: 1.02rem;
+    line-height: 1.42;
   }
 
   .lyric.spacer {
@@ -304,7 +305,12 @@ const {
     }
 
     .lyric {
-      font-size: 1rem;
+      font-size: 0.98rem;
+      line-height: 1.38;
+    }
+
+    .sheet {
+      gap: 6px;
     }
   }
 </style>

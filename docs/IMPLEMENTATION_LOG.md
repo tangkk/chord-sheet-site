@@ -291,3 +291,11 @@
 - 输出：
   - 删除 `src/data/fushi-shanxia.md`
   - 删除 `src/data/hai-kuo-tian-kong.md`
+
+### Step 032 — 收紧曲谱排版行距以减少翻页频率
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：降低 sheet 间距、歌词行高、和弦间距、blank line 高度与 alternate line 占用空间
+- 原因：用户明确希望演奏查看时减少翻页，页面应更紧凑
+- 结果：曲谱整体纵向占用空间减少，更适合边看边弹
+- 输出：
+  - `src/layouts/Layout.astro`
