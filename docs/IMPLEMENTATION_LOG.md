@@ -408,3 +408,11 @@
   - `src/components/ChordSheet.tsx`
   - `src/lib/chord-sheet.ts`
   - `src/layouts/Layout.astro`
+
+### Step 045 — 将当前稳定规则摘要回写到 README
+- 时间：2026-04-05 19:xx Asia/Shanghai
+- 动作：把近期反复确认后的关键规则与页面方向整理进 README 的摘要部分
+- 原因：用户要求把刚才沟通里重要的关键点沉淀为更容易读取的项目文档，而不是只散落在细分文档与聊天中
+- 结果：README 已能快速反映当前项目的转换规则、验收流程与页面交互方向
+- 输出：
+  - `README.md`
