@@ -17,12 +17,8 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_UR
         <a class="song-flat-title" href={`${baseUrl}songs/${song.slug}/`}>{song.title}</a>
         <span class="song-flat-sep">-</span>
         <span class="song-flat-meta">原调：{song.originalKey}</span>
-        {song.language ? (
-          <>
-            <span class="song-flat-sep">-</span>
-            <span class="song-flat-meta">{song.language === 'yue' ? '粤语' : song.language}</span>
-          </>
-        ) : null}
+        {song.language ? <span class="song-flat-sep">-</span> : null}
+        {song.language ? <span class="song-flat-meta">{song.language === 'yue' ? '粤语' : song.language}</span> : null}
         <span class="song-flat-sep">-</span>
         <span class="song-flat-meta">流行</span>
         <span class="song-flat-sep">-</span>
