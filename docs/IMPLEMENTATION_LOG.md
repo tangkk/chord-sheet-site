@@ -536,6 +536,15 @@
   - `docs/CONTENT_FORMAT.md`
   - `docs/IMPLEMENTATION_LOG.md`
 
+### Step 062 — 将 slash chord 规则升级为“服从和声拼写语境”
+- 时间：2026-04-05 23:xx Asia/Shanghai
+- 动作：将 slash chord 规则从“左右两侧统一升降号体系”进一步升级为“slash bass 还必须服从整个和弦的和声拼写语境”，并以 `Cm/Eb` vs `Cm/D#` 作为明确示例写入文档
+- 原因：用户指出 slash chord 的正确性不能只看根音或 pitch class，必须考虑整个和弦（如 `Cm` 的 `C-Eb-G`）的拼写语境
+- 结果：slash chord 规则已从简单 accidental 一致性，升级为更严格的和声语义一致性规则
+- 输出：
+  - `docs/CONTENT_FORMAT.md`
+  - `docs/IMPLEMENTATION_LOG.md`
+
 ### Step 058 — 记录 sourceKey / originalKey 双字段展示模式
 - 时间：2026-04-05 21:xx Asia/Shanghai
 - 动作：将“原始输入 key 与真实原调不一致时，应记录 `sourceKey` 并在页面默认直接展示 `originalKey`”补入 README 与内容格式文档

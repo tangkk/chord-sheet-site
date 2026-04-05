@@ -11,6 +11,7 @@ export function getDefaultAccidentalMode(key: string): AccidentalMode {
 
 const SHARP_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const FLAT_NOTES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+const LETTERS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'] as const;
 
 const NOTE_INDEX: Record<string, number> = {
   C: 0,
@@ -36,10 +37,26 @@ const NOTE_INDEX: Record<string, number> = {
   Cb: 11,
 };
 
+const NATURAL_NOTE_INDEX: Record<(typeof LETTERS)[number], number> = {
+  C: 0,
+  D: 2,
+  E: 4,
+  F: 5,
+  G: 7,
+  A: 9,
+  B: 11,
+};
+
 const ROOT_REGEX = /^([A-G](?:#|b)?)(.*)$/;
 
 function normalizeIndex(index: number): number {
   return ((index % 12) + 12) % 12;
+}
+
+function normalizeAccidentalOffset(offset: number): number {
+  if (offset > 6) return offset - 12;
+  if (offset < -6) return offset + 12;
+  return offset;
 }
 
 function transposeNote(note: string, semitones: number, accidentalMode: AccidentalMode): string {
@@ -49,14 +66,69 @@ function transposeNote(note: string, semitones: number, accidentalMode: Accident
   return accidentalMode === 'flat' ? FLAT_NOTES[next] : SHARP_NOTES[next];
 }
 
+function parseChordPart(part: string): { root: string; suffix: string } | null {
+  const match = part.match(ROOT_REGEX);
+  if (!match) return null;
+  const [, root, suffix] = match;
+  return { root, suffix };
+}
+
+function letterDistance(from: string, to: string): number | null {
+  const fromIndex = LETTERS.indexOf(from[0] as (typeof LETTERS)[number]);
+  const toIndex = LETTERS.indexOf(to[0] as (typeof LETTERS)[number]);
+  if (fromIndex === -1 || toIndex === -1) return null;
+  return (toIndex - fromIndex + LETTERS.length) % LETTERS.length;
+}
+
+function spellNoteFromChordContext(targetRoot: string, originalRoot: string, originalBass: string): string | null {
+  const targetRootIndex = NOTE_INDEX[targetRoot];
+  const originalBassIndex = NOTE_INDEX[originalBass];
+  const originalRootIndex = NOTE_INDEX[originalRoot];
+
+  if (targetRootIndex === undefined || originalBassIndex === undefined || originalRootIndex === undefined) {
+    return null;
+  }
+
+  const diatonicDistance = letterDistance(originalRoot, originalBass);
+  if (diatonicDistance === null) return null;
+
+  const targetBassIndex = normalizeIndex(targetRootIndex + (originalBassIndex - originalRootIndex));
+  const targetLetterIndex = (LETTERS.indexOf(targetRoot[0] as (typeof LETTERS)[number]) + diatonicDistance) % LETTERS.length;
+  const targetLetter = LETTERS[targetLetterIndex];
+  const naturalIndex = NATURAL_NOTE_INDEX[targetLetter];
+  const accidentalOffset = normalizeAccidentalOffset(targetBassIndex - naturalIndex);
+
+  if (accidentalOffset < -1 || accidentalOffset > 1) {
+    return null;
+  }
+
+  if (accidentalOffset === -1) return `${targetLetter}b`;
+  if (accidentalOffset === 1) return `${targetLetter}#`;
+  return targetLetter;
+}
+
 function transposeChordToken(token: string, semitones: number, accidentalMode: AccidentalMode): string {
   const slashParts = token.split('/');
+
+  if (slashParts.length === 2) {
+    const head = parseChordPart(slashParts[0]);
+    const bass = parseChordPart(slashParts[1]);
+
+    if (head && bass) {
+      const transposedRoot = transposeNote(head.root, semitones, accidentalMode);
+      const contextualBass = spellNoteFromChordContext(transposedRoot, head.root, bass.root);
+
+      if (contextualBass) {
+        return `${transposedRoot}${head.suffix}/${contextualBass}${bass.suffix}`;
+      }
+    }
+  }
+
   return slashParts
     .map((part) => {
-      const match = part.match(ROOT_REGEX);
-      if (!match) return part;
-      const [, root, suffix] = match;
-      return `${transposeNote(root, semitones, accidentalMode)}${suffix}`;
+      const parsed = parseChordPart(part);
+      if (!parsed) return part;
+      return `${transposeNote(parsed.root, semitones, accidentalMode)}${parsed.suffix}`;
     })
     .join('/');
 }
