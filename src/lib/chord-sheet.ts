@@ -3,9 +3,26 @@ export type ParsedSegment = {
   lyric: string;
 };
 
-export type ParsedLine = ParsedSegment[];
+export type ParsedLine =
+  | { type: 'blank' }
+  | { type: 'section'; text: string }
+  | { type: 'alt'; text: string }
+  | { type: 'segments'; segments: ParsedSegment[] };
 
 export function parseChordLine(line: string): ParsedLine {
+  const trimmed = line.trim();
+
+  if (trimmed === '') {
+    return { type: 'blank' };
+  }
+
+  if (/^\[alt\]\s+/i.test(trimmed)) {
+    return { type: 'alt', text: trimmed.replace(/^\[alt\]\s+/i, '') };
+  }
+
+  if (/^[A-Za-z0-9 _-]+:$/.test(trimmed)) {
+    return { type: 'section', text: trimmed.slice(0, -1) };
+  }
   const segments: ParsedSegment[] = [];
   const regex = /\(([^)]+)\)/g;
   let lastIndex = 0;
@@ -32,7 +49,7 @@ export function parseChordLine(line: string): ParsedLine {
     segments.push({ chord: null, lyric: line });
   }
 
-  return segments;
+  return { type: 'segments', segments };
 }
 
 export function parseChordSheet(text: string): ParsedLine[] {

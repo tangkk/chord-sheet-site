@@ -164,3 +164,54 @@
   - `src/pages/index.astro`
   - `README.md`
   - `~/.openclaw/workspace/USER.md`
+
+### Step 018 — 明确歌曲入库方式为“Notes 粘贴原文 → 规范化入库”
+- 时间：2026-04-05 17:xx Asia/Shanghai
+- 动作：将歌曲入库工作流写入 README 与内容格式文档
+- 原因：用户明确表示后续不会先做批量导入，而是会一条一条粘贴来自 mac Notes app 的历史 chord sheet，并需要我帮助规范化
+- 结果：项目文档已明确默认入库流程与规范化处理原则
+- 输出：
+  - `README.md`
+  - `docs/CONTENT_FORMAT.md`
+
+### Step 019 — 明确支持两种原始 chord sheet 输入形态
+- 时间：2026-04-05 17:xx Asia/Shanghai
+- 动作：将“内嵌和弦形态”与“和弦行 + 歌词括号定位形态”同时写入文档
+- 原因：用户确认这两种写法以后都需要支持，且第二种是来自 Notes 的真实历史输入形态
+- 结果：文档已明确区分两种输入格式及默认解释规则
+- 输出：
+  - `README.md`
+  - `docs/CONTENT_FORMAT.md`
+
+### Step 020 — 确立 alternate line 与纯音乐括号的入库规则
+- 时间：2026-04-05 17:xx Asia/Shanghai
+- 动作：将 `[]` 解释为 alternate line，将空括号 `()` 解释为纯音乐/无歌词占位，并写入文档
+- 原因：用户明确说明这两类写法是其历史 chord sheet 的真实组成部分，必须支持
+- 结果：项目文档已具备更完整的原始输入语义约定
+- 输出：
+  - `docs/CONTENT_FORMAT.md`
+
+### Step 021 — 入库《今夜没有风》首版规范化文件
+- 时间：2026-04-05 17:xx Asia/Shanghai
+- 动作：根据 Notes 原文，将《今夜没有风》整理为项目标准 markdown 文件
+- 原因：建立第一首真实歌曲入库样本，验证规范化流程可行
+- 结果：歌曲已按当前约定完成首版入库
+- 输出：
+  - `src/data/jinye-meiyou-feng.md`
+
+### Step 022 — 优化渲染器以支持结构标题与 alternate line
+- 时间：2026-04-05 17:xx Asia/Shanghai
+- 动作：为 chord sheet 解析器与前端组件增加 `section` / `alt` 行类型支持
+- 原因：真实曲谱已包含 `intro:`、`verse:` 等结构段落，以及 `[alt]` alternate line，默认纯文本显示不够清楚
+- 结果：结构标题与 alternate line 可在页面上用更清晰的样式展示
+- 输出：
+  - `src/lib/chord-sheet.ts`
+  - `src/components/ChordSheet.tsx`
+
+### Step 023 — 将站点视觉从深色改为浅色清爽风格
+- 时间：2026-04-05 17:xx Asia/Shanghai
+- 动作：重设全局配色、背景、卡片、按钮与字体栈
+- 原因：用户明确希望网站改为浅色系、整体更清爽，字体观感也要更轻盈
+- 结果：站点视觉方向已从深色阅读风格切换为浅色清爽风格
+- 输出：
+  - `src/layouts/Layout.astro`

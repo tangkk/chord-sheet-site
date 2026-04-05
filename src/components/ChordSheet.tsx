@@ -59,14 +59,29 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
 
       <div className="sheet">
         {parsed.map((line, lineIndex) => {
-          const isBlank = line.length === 1 && !line[0].chord && line[0].lyric === '';
-          if (isBlank) {
+          if (line.type === 'blank') {
             return <div key={lineIndex} className="line blank" />;
+          }
+
+          if (line.type === 'section') {
+            return (
+              <div key={lineIndex} className="section-line">
+                {line.text}
+              </div>
+            );
+          }
+
+          if (line.type === 'alt') {
+            return (
+              <div key={lineIndex} className="alt-line">
+                [alt] {line.text}
+              </div>
+            );
           }
 
           return (
             <div key={lineIndex} className="line">
-              {line.map((segment, segmentIndex) => (
+              {line.segments.map((segment, segmentIndex) => (
                 <span key={`${lineIndex}-${segmentIndex}`} className="segment">
                   <span className="chord">{segment.chord ?? '\u00A0'}</span>
                   <span className="lyric">{segment.lyric || '\u00A0'}</span>
