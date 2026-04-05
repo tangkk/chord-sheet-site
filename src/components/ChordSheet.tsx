@@ -82,11 +82,17 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
           if (line.type === 'chords-only') {
             return (
               <div key={lineIndex} className="chords-only-line">
-                {line.chords.map((chord, chordIndex) => (
-                  <span key={`${lineIndex}-${chordIndex}`} className="chords-only-chip">
-                    {chord}
-                  </span>
-                ))}
+                {line.tokens.map((token, chordIndex) =>
+                  token.type === 'bar' ? (
+                    <span key={`${lineIndex}-${chordIndex}`} className="chords-only-bar" aria-hidden="true">
+                      |
+                    </span>
+                  ) : (
+                    <span key={`${lineIndex}-${chordIndex}`} className="chords-only-chip">
+                      {token.value}
+                    </span>
+                  ),
+                )}
               </div>
             );
           }

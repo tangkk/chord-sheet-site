@@ -253,3 +253,13 @@
 - 输出：
   - `src/data/jinye-meiyou-feng.md`
   - `docs/CONTENT_FORMAT.md`
+
+### Step 028 — 在纯音乐段中保留小节线并移除多余和弦框样式
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：让 `|` 作为 barline 在纯和弦行中单独渲染，同时将和弦 chip 从带边框块状样式改为更干净的文本样式
+- 原因：用户反馈 instrumental 段需要明确体现小节线，且 chord 后面的框样式多余
+- 结果：纯音乐段会保留 barline 信息，视觉更接近真实 chord sheet
+- 输出：
+  - `src/lib/chord-sheet.ts`
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`

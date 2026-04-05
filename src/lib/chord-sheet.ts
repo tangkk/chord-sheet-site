@@ -3,11 +3,15 @@ export type ParsedSegment = {
   lyric: string;
 };
 
+export type ChordOnlyToken =
+  | { type: 'chord'; value: string }
+  | { type: 'bar' };
+
 export type ParsedLine =
   | { type: 'blank' }
   | { type: 'section'; text: string }
   | { type: 'alt'; text: string }
-  | { type: 'chords-only'; chords: string[] }
+  | { type: 'chords-only'; tokens: ChordOnlyToken[] }
   | { type: 'segments'; segments: ParsedSegment[] };
 
 export function parseChordLine(line: string): ParsedLine {
@@ -25,13 +29,27 @@ export function parseChordLine(line: string): ParsedLine {
     return { type: 'section', text: trimmed.slice(0, -1) };
   }
 
-  const chordOnlyCandidates = trimmed.split('|').flatMap((part) => part.trim().split(/\s+/)).filter(Boolean);
+  const rawParts = trimmed.split(/(\|)/).map((part) => part.trim()).filter((part) => part !== '');
+  const chordOnlyCandidates = rawParts.filter((part) => part !== '|').flatMap((part) => part.split(/\s+/)).filter(Boolean);
   const isChordOnly =
     chordOnlyCandidates.length > 0 &&
     chordOnlyCandidates.every((token) => /^[A-G](?:#|b)?(?:[^\s|]*)$/.test(token));
 
   if (isChordOnly) {
-    return { type: 'chords-only', chords: chordOnlyCandidates };
+    const tokens: ChordOnlyToken[] = [];
+
+    for (const part of rawParts) {
+      if (part === '|') {
+        tokens.push({ type: 'bar' });
+        continue;
+      }
+
+      for (const chord of part.split(/\s+/).filter(Boolean)) {
+        tokens.push({ type: 'chord', value: chord });
+      }
+    }
+
+    return { type: 'chords-only', tokens };
   }
   const segments: ParsedSegment[] = [];
   const regex = /\(([^)]+)\)/g;
@@ -63,7 +81,10 @@ export function parseChordLine(line: string): ParsedLine {
   const allHaveChords = segments.every((segment) => segment.chord && segment.chord.trim() !== '');
 
   if (allWhitespaceLyrics && allHaveChords) {
-    return { type: 'chords-only', chords: segments.map((segment) => segment.chord!).filter(Boolean) };
+    return {
+      type: 'chords-only',
+      tokens: segments.map((segment) => ({ type: 'chord' as const, value: segment.chord! })).filter(Boolean),
+    };
   }
 
   return { type: 'segments', segments };
