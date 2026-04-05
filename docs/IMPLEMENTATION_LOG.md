@@ -325,3 +325,12 @@
 - 输出：
   - `src/layouts/Layout.astro`
   - `docs/CONTENT_FORMAT.md`
+
+### Step 036 — 去掉正文外框并隐藏标题上方歌手行
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：移除 chord sheet 正文区域的卡片边框/阴影，并删除标题上方单独的歌手行
+- 原因：用户希望正文更像直接阅读的谱面，不要被框起来；同时认为标题上方再显示歌手名是多余信息
+- 结果：歌曲详情页顶部与正文区域都进一步去装饰化
+- 输出：
+  - `src/pages/songs/[...slug].astro`
+  - `src/layouts/Layout.astro`
