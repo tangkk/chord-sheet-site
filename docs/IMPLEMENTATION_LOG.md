@@ -299,3 +299,11 @@
 - 结果：曲谱整体纵向占用空间减少，更适合边看边弹
 - 输出：
   - `src/layouts/Layout.astro`
+
+### Step 033 — 进行第二轮紧凑化压缩
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：进一步压缩页面外边距、卡片 padding、toolbar 高度、section 标题字号、歌词行高与 chord 字号
+- 原因：用户反馈第一轮收紧后，页面仍偏松，不利于减少翻页
+- 结果：曲谱页改为更接近“演奏视图”的紧凑排版
+- 输出：
+  - `src/layouts/Layout.astro`

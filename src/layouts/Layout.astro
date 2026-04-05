@@ -66,13 +66,13 @@ const {
   }
 
   .page-shell {
-    width: min(1080px, calc(100% - 32px));
+    width: min(1180px, calc(100% - 24px));
     margin: 0 auto;
-    padding: 32px 0 64px;
+    padding: 20px 0 40px;
   }
 
   .site-header {
-    margin-bottom: 28px;
+    margin-bottom: 18px;
   }
 
   .site-title {
@@ -140,8 +140,8 @@ const {
   }
 
   .song-hero {
-    padding: 24px;
-    margin-bottom: 20px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
   }
 
   .song-title {
@@ -150,28 +150,28 @@ const {
   }
 
   .chord-sheet-card {
-    padding: 20px;
+    padding: 14px 16px;
     background: var(--panel);
     border: 1px solid var(--panel-border);
-    border-radius: 18px;
+    border-radius: 16px;
     box-shadow: var(--shadow);
   }
 
   .toolbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 10px 14px;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 18px;
-    margin-bottom: 18px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
     border-bottom: 1px solid var(--panel-border);
   }
 
   .toolbar-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
   }
 
@@ -187,9 +187,10 @@ const {
     background: #ffffff;
     color: var(--text);
     border: 1px solid var(--panel-border);
-    border-radius: 10px;
-    padding: 9px 12px;
+    border-radius: 8px;
+    padding: 6px 10px;
     font: inherit;
+    line-height: 1.2;
   }
 
   button:hover,
@@ -201,7 +202,7 @@ const {
   .sheet {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
     overflow-x: auto;
   }
 
@@ -209,35 +210,35 @@ const {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    row-gap: 6px;
+    row-gap: 2px;
   }
 
   .line.blank {
-    min-height: 10px;
+    min-height: 4px;
   }
 
   .section-line {
-    margin: 4px 0 0;
+    margin: 3px 0 0;
     color: var(--accent);
-    font-size: 0.88rem;
+    font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
   .alt-line {
     color: var(--muted);
-    font-size: 0.94rem;
-    line-height: 1.4;
+    font-size: 0.88rem;
+    line-height: 1.25;
     padding-left: 2px;
     font-style: italic;
-    margin-top: -2px;
+    margin-top: -3px;
   }
 
   .chords-only-line {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 10px;
+    gap: 4px 8px;
     align-items: center;
     padding: 0;
   }
@@ -270,17 +271,18 @@ const {
   }
 
   .chord {
-    min-height: 1.05em;
-    margin-bottom: 1px;
+    min-height: .95em;
+    margin-bottom: 0;
     color: var(--chord);
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    letter-spacing: 0.01em;
+    letter-spacing: 0;
+    line-height: 1;
   }
 
   .lyric {
-    font-size: 1.02rem;
-    line-height: 1.42;
+    font-size: 0.96rem;
+    line-height: 1.18;
   }
 
   .lyric.spacer {
@@ -289,28 +291,34 @@ const {
 
   @media (max-width: 720px) {
     .page-shell {
-      width: min(100% - 20px, 1080px);
-      padding-top: 20px;
+      width: min(100% - 14px, 1180px);
+      padding-top: 14px;
+      padding-bottom: 24px;
     }
 
     .chord-sheet-card,
     .song-hero,
     .song-card {
-      padding: 16px;
+      padding: 12px;
     }
 
     .toolbar {
       align-items: flex-start;
       justify-content: flex-start;
+      gap: 8px 10px;
     }
 
     .lyric {
-      font-size: 0.98rem;
-      line-height: 1.38;
+      font-size: 0.92rem;
+      line-height: 1.14;
+    }
+
+    .chord {
+      font-size: 0.78rem;
     }
 
     .sheet {
-      gap: 6px;
+      gap: 3px;
     }
   }
 </style>
