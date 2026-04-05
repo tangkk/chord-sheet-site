@@ -8,6 +8,8 @@ const {
   title = 'Chord Sheet Site',
   description = '一个给自己长期维护的和弦谱网站',
 } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
 ---
 
 <!doctype html>
@@ -15,7 +17,7 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href={faviconHref} />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title}</title>
