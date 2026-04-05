@@ -244,3 +244,12 @@
   - `src/components/ChordSheet.tsx`
   - `src/layouts/Layout.astro`
 - 备注：首轮实现只识别了裸和弦文本行，未覆盖 `( A ) ( Dm6 ) ...` 这种已规范化的纯和弦写法；后续补充为：当一整行所有 segment 都仅含空白歌词且全部带和弦时，也应归类为 `chords-only`
+
+### Step 027 — 调整 instrumental 入库策略为“保留原始小节线文本”
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：将《今夜没有风》中的 instrumental 段改回原始和弦文本行，并更新文档策略
+- 原因：用户明确说明这类带 `|` 的纯音乐段，真正有意义的是原始和弦文本与小节线；下方空括号数量没有必要参与展示
+- 结果：instrumental 段将优先保留原始 chord line，而不是强行规范成括号格式
+- 输出：
+  - `src/data/jinye-meiyou-feng.md`
+  - `docs/CONTENT_FORMAT.md`

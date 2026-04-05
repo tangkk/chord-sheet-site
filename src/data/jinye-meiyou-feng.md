@@ -64,7 +64,7 @@ to outro:
 
 instrumental:
 
-( Eb ) ( Bb/D ) | ( Cm7 ) ( Eb/Bb ) | ( G ) ( Cm ) ( F ) | ( Bb ) ( Eb ) ( Ab ) | ( Bm7 ) ( E11 )
+Eb Bb/D | Cm7 Eb/Bb | G Cm F | Bb Eb Ab | Bm7 E11
 
 verse 2:
 
