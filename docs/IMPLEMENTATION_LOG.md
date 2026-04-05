@@ -370,3 +370,14 @@
   - `src/components/ChordSheet.tsx`
   - `src/layouts/Layout.astro`
   - `docs/INGEST_WORKFLOW.md`
+
+### Step 041 — 收敛歌曲头部信息并移除 Capo 显示
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：去掉 Capo 展示，将原调、语言、风格、歌手收敛到同一行，并减少手机端标题区与正文之间的空隙
+- 原因：用户希望歌曲头部信息更紧凑，避免语言重复显示，并进一步压缩手机端首屏占用
+- 结果：歌曲详情页头部信息更简洁，正文更早进入视野
+- 输出：
+  - `src/pages/index.astro`
+  - `src/pages/songs/[...slug].astro`
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`

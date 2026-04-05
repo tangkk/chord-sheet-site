@@ -49,12 +49,6 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
           </label>
         </div>
 
-        {typeof capo === 'number' ? (
-          <div className="toolbar-group">
-            <span className="label">Capo</span>
-            <strong>{capo}</strong>
-          </div>
-        ) : null}
       </div>
 
       <div className="mobile-floating-toolbar" aria-label="Transpose controls">
