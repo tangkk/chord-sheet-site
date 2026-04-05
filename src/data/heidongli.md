@@ -1,13 +1,13 @@
 ---
 title: 黑洞裡
-artist: 梁詠琪
-language: yue
-originalKey: Dm7
+artist: 方大同
+language: zh
+originalKey: C
 capo: 0
 tags:
-  - 粤语
+  - 国语
   - 流行
-  - 梁詠琪
+  - 方大同
 ---
 
 verse 1:
