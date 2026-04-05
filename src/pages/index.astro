@@ -24,7 +24,7 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_UR
         <div class="muted">{song.artist}</div>
         <div class="meta-grid">
           <span>原调：{song.originalKey}</span>
-          {song.language ? <span>语言：{song.language}</span> : null}
+          {song.language ? <span>语言：{song.language === 'yue' ? '粤语' : song.language}</span> : null}
           {typeof song.capo === 'number' ? <span>Capo：{song.capo}</span> : null}
         </div>
         {song.tags.length > 0 ? (

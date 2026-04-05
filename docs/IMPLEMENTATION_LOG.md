@@ -224,3 +224,12 @@
 - 输出：
   - `src/components/ChordSheet.tsx`
   - `src/layouts/Layout.astro`
+
+### Step 025 — 将语言显示从代码改为中文名称
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：将页面中的 `language: yue` 显示为 `粤语`
+- 原因：面向实际使用时，语言字段直接显示代码不够自然
+- 结果：页面上的语言信息改为更直观的中文名称
+- 输出：
+  - `src/pages/index.astro`
+  - `src/pages/songs/[...slug].astro`
