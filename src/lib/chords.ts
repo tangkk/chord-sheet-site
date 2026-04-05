@@ -133,8 +133,42 @@ function transposeChordToken(token: string, semitones: number, accidentalMode: A
     .join('/');
 }
 
+function transposeChordOnlyLine(line: string, semitones: number, accidentalMode: AccidentalMode): string {
+  const trimmed = line.trim();
+  if (!trimmed) return line;
+
+  const rawParts = trimmed.split(/(\|)/).map((part) => part.trim()).filter((part) => part !== '');
+  const chordOnlyCandidates = rawParts.filter((part) => part !== '|').flatMap((part) => part.split(/\s+/)).filter(Boolean);
+  const isChordOnly =
+    chordOnlyCandidates.length > 0 &&
+    chordOnlyCandidates.every((token) => /^[A-G](?:#|b)?(?:[^\s|]*)$/.test(token));
+
+  if (!isChordOnly) return line;
+
+  return rawParts
+    .map((part) => {
+      if (part === '|') return '|';
+      return part
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((token) => transposeChordToken(token, semitones, accidentalMode))
+        .join(' ');
+    })
+    .join(' ')
+    .replace(/\s+\|\s+/g, ' | ')
+    .trim();
+}
+
 export function transposeChordText(input: string, semitones: number, accidentalMode: AccidentalMode = 'sharp'): string {
-  return input.replace(/\(([^)]+)\)/g, (_, chord: string) => `(${transposeChordToken(chord.trim(), semitones, accidentalMode)})`);
+  return input
+    .split(/\r?\n/)
+    .map((line) => {
+      if (/\(([^)]+)\)/.test(line)) {
+        return line.replace(/\(([^)]+)\)/g, (_, chord: string) => `(${transposeChordToken(chord.trim(), semitones, accidentalMode)})`);
+      }
+      return transposeChordOnlyLine(line, semitones, accidentalMode);
+    })
+    .join('\n');
 }
 
 export function transposeKey(key: string, semitones: number, accidentalMode: AccidentalMode = 'sharp'): string {
