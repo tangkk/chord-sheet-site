@@ -25,17 +25,19 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
 
   return (
     <section className="chord-sheet-card">
-      <div className="floating-toolbar" aria-label="Transpose controls">
-        <div className="floating-key-readout">
-          <span className="floating-key-value">{displayKey}</span>
-          <span className="floating-key-origin">原调 {originalKey}</span>
+      <div className="toolbar" aria-label="Transpose controls">
+        <div className="toolbar-group toolbar-readout">
+          <span className="toolbar-key-value">{displayKey}</span>
+          <span className="toolbar-key-origin">原调 {originalKey}</span>
         </div>
-        <button type="button" onClick={() => setSemitones((v) => v + 1)}>+</button>
-        <button type="button" onClick={() => setSemitones(0)}>0</button>
-        <button type="button" onClick={() => setSemitones((v) => v - 1)}>-</button>
-        <button type="button" onClick={() => setAccidentalMode((mode) => (mode === 'flat' ? 'sharp' : 'flat'))}>
-          {accidentalMode === 'flat' ? '♭' : '♯'}
-        </button>
+        <div className="toolbar-group toolbar-buttons">
+          <button type="button" onClick={() => setSemitones((v) => v - 1)}>-</button>
+          <button type="button" onClick={() => setSemitones(0)}>0</button>
+          <button type="button" onClick={() => setSemitones((v) => v + 1)}>+</button>
+          <button type="button" onClick={() => setAccidentalMode((mode) => (mode === 'flat' ? 'sharp' : 'flat'))}>
+            {accidentalMode === 'flat' ? '♭' : '♯'}
+          </button>
+        </div>
       </div>
 
       <div className="sheet">
@@ -78,8 +80,10 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
             );
           }
 
+          const longLine = line.segments.map((segment) => segment.lyric).join('').replace(/\s+/g, '').length >= 18;
+
           return (
-            <div key={lineIndex} className="line">
+            <div key={lineIndex} className={`line${longLine ? ' mobile-reading-line' : ''}`}>
               {line.segments.map((segment, segmentIndex) => {
                 const chordLength = (segment.chord ?? '').length;
                 const lyricLength = segment.lyric.trim().length;

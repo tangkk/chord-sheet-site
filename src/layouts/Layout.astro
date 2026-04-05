@@ -199,57 +199,41 @@ const {
   .toolbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 14px;
+    gap: 8px 12px;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 8px;
-    margin-bottom: 8px;
+    padding: 0 0 8px;
+    margin: 0 0 8px;
     border-bottom: 1px solid #e8eef5;
   }
 
-  .floating-toolbar {
-    position: fixed;
-    right: 10px;
-    top: 108px;
-    z-index: 20;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 6px;
-    background: rgba(255, 255, 255, 0.82);
-    border: 1px solid #dbe5f0;
-    border-radius: 14px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 6px 18px rgba(58, 84, 120, 0.12);
-  }
-
-  .floating-key-readout {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    padding: 4px 2px 6px;
+  .toolbar-readout {
+    gap: 8px;
     color: var(--text);
   }
 
-  .floating-key-value {
-    font-size: 0.9rem;
+  .toolbar-key-value {
+    font-size: 0.94rem;
     font-weight: 700;
     line-height: 1;
   }
 
-  .floating-key-origin {
-    font-size: 0.66rem;
+  .toolbar-key-origin {
+    font-size: 0.74rem;
     color: var(--muted);
     line-height: 1;
   }
 
-  .floating-toolbar button {
+  .toolbar-buttons {
+    gap: 6px;
+  }
+
+  .toolbar button {
     min-width: 34px;
-    min-height: 34px;
-    padding: 0;
+    min-height: 30px;
+    padding: 0 8px;
     border-radius: 10px;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
   }
 
@@ -389,7 +373,7 @@ const {
       width: min(100% - 14px, 1180px);
       padding-top: 10px;
       padding-bottom: 24px;
-      padding-right: 54px;
+      padding-right: 0;
     }
 
     .chord-sheet-card,
@@ -403,15 +387,24 @@ const {
       gap: 3px 6px;
     }
 
-    .floating-toolbar {
-      right: 8px;
-      top: 96px;
+    .toolbar {
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px 10px;
     }
 
-    .toolbar {
-      align-items: flex-start;
-      justify-content: flex-start;
-      gap: 8px 10px;
+    .toolbar-key-value {
+      font-size: 0.9rem;
+    }
+
+    .toolbar-key-origin {
+      font-size: 0.72rem;
+    }
+
+    .toolbar button {
+      min-width: 32px;
+      min-height: 28px;
+      font-size: 0.88rem;
     }
 
     .lyric {
@@ -425,6 +418,22 @@ const {
 
     .sheet {
       gap: 3px;
+    }
+
+    .mobile-reading-line {
+      flex-wrap: wrap;
+      row-gap: 6px;
+      overflow-x: visible;
+    }
+
+    .mobile-reading-line .segment {
+      min-width: 0;
+      margin-right: 0.14rem;
+    }
+
+    .mobile-reading-line .lyric {
+      min-width: auto;
+      white-space: pre-wrap;
     }
   }
 </style>
