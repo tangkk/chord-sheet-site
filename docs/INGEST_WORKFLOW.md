@@ -72,7 +72,8 @@ pnpm extract:pdf /path/to/song.pdf > /tmp/song-from-pdf.txt
 建议流程：
 1. 先用 `extract:pdf` 提取可读文本
 2. 人工查看位置/空格是否仍足够可靠
-3. 再决定是否继续进入 `normalize:sheet` 或手工整理
+3. 若对位信息仍主要体现在“和弦行 + 歌词行”的关系中，可先直接入库为可审阅版本
+4. 再决定是否继续进入 `normalize:sheet` 或后续更精细的括号化处理
 
 ## 当前限制
 
