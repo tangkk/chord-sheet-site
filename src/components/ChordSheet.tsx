@@ -104,7 +104,11 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
                 const lyricLength = segment.lyric.trim().length;
                 const compactNeedsBoost = chordLength >= 6 && lyricLength <= 2;
                 return (
-                  <span key={`${lineIndex}-${segmentIndex}`} className={`segment${compactNeedsBoost ? ' dense-short' : ''}`}>
+                  <span
+                    key={`${lineIndex}-${segmentIndex}`}
+                    className={`segment${compactNeedsBoost ? ' dense-short' : ''}`}
+                    style={compactNeedsBoost ? { minWidth: `${Math.max(5.4, chordLength * 0.9)}rem` } : undefined}
+                  >
                     <span className="chord">{segment.chord ?? '\u00A0'}</span>
                     <span className={`lyric${segment.lyric === '' ? ' spacer' : ''}`}>{segment.lyric || '\u00A0'}</span>
                   </span>

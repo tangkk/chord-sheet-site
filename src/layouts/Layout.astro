@@ -213,9 +213,11 @@ const {
 
   .line {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: flex-start;
+    column-gap: 0.18rem;
     row-gap: 2px;
+    overflow-x: auto;
   }
 
   .line.blank {
@@ -278,7 +280,7 @@ const {
   }
 
   .segment.dense-short {
-    min-width: 5.4rem;
+    padding-right: 0.3rem;
   }
 
   .chord {

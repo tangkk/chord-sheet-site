@@ -351,3 +351,12 @@
 - 输出：
   - `src/components/ChordSheet.tsx`
   - `src/layouts/Layout.astro`
+
+### Step 039 — 改为单行横向排版并按和弦长度动态扩宽危险 segment
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：将歌词行从可换行 flex 改为单行横向布局，并对“长和弦 + 短歌词” segment 按和弦长度动态设置最小宽度
+- 原因：用户确认上一轮增强仍不够明显，说明必须避免该类歌词行在布局层继续被压缩
+- 结果：像“多细致新鲜”这种句子会优先保持横向展开，不再轻易挤成一团
+- 输出：
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`
