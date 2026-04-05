@@ -12,7 +12,7 @@ tags:
 
 intro:
 
-( A ) ( Dm6 ) ( A ) ( Dm6 ) ( E9 )
+A | Dm6 | A | Dm6 | E9
 
 verse 1:
 
@@ -82,4 +82,4 @@ verse 2:
 
 outro:
 
-( A ) ( Dm6 ) ( A ) ( Dm6 ) ( E9 )
+A | Dm6 | A | Dm6 | E9

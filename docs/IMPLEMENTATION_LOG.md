@@ -263,3 +263,12 @@
   - `src/lib/chord-sheet.ts`
   - `src/components/ChordSheet.tsx`
   - `src/layouts/Layout.astro`
+
+### Step 029 — 将 intro/outro 统一改为保留原始 barline 文本
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：把《今夜没有风》的 intro/outro 从无 barline 的规范化和弦行改回带 `|` 的原始文本形式，并更新文档策略
+- 原因：用户明确确认：只要原文中有 `|`，就应该在网页中体现，不应因段落类型不同而丢失
+- 结果：intro / instrumental / outro 的纯音乐展示策略已统一
+- 输出：
+  - `src/data/jinye-meiyou-feng.md`
+  - `docs/CONTENT_FORMAT.md`
