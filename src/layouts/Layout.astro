@@ -109,6 +109,41 @@ const {
     margin: 0 0 10px;
   }
 
+  .home-title {
+    margin-bottom: 0;
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+  }
+
+  .song-flat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .song-flat-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    padding: 2px 0;
+    border-bottom: 1px solid #eef2f6;
+    font-size: 0.96rem;
+    line-height: 1.35;
+  }
+
+  .song-flat-title {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .song-flat-meta {
+    color: var(--muted);
+  }
+
+  .song-flat-sep {
+    color: #b8c2cd;
+  }
+
   .tag-row {
     display: flex;
     gap: 8px;
@@ -362,6 +397,11 @@ const {
     .song-hero,
     .song-card {
       padding: 0;
+    }
+
+    .song-flat-row {
+      font-size: 0.92rem;
+      gap: 3px 6px;
     }
 
     .floating-toolbar {

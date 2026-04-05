@@ -6,28 +6,27 @@ const songs = getSongs().sort((a, b) => a.title.localeCompare(b.title, 'zh-Hans-
 const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
-<Layout title="Chord Sheet Site" description="tangkk 的个人和弦谱库">
+<Layout title="tangkk 的个人和弦谱库" description="tangkk 的个人和弦谱库">
   <header class="site-header">
-    <p class="site-subtitle">tangkk 的个人和弦谱库</p>
-    <h1 class="site-title">Chord Sheet Site</h1>
-    <p class="site-subtitle">
-      继续沿用 <code>(Chord)</code> 内嵌格式，支持自动排版与 transpose。当前先做一个干净、能长期维护的 MVP。
-    </p>
+    <h1 class="site-title home-title">tangkk 的个人和弦谱库</h1>
   </header>
 
-  <section class="song-list">
+  <section class="song-flat-list">
     {songs.map((song) => (
-      <article class="song-card card">
-        <h2>
-          <a href={`${baseUrl}songs/${song.slug}/`}>{song.title}</a>
-        </h2>
-        <div class="muted">{song.artist}</div>
-        <div class="meta-grid">
-          <span>原调：{song.originalKey}</span>
-          {song.language ? <span>{song.language === 'yue' ? '粤语' : song.language}</span> : null}
-          <span>流行</span>
-          <span>{song.artist}</span>
-        </div>
+      <article class="song-flat-row">
+        <a class="song-flat-title" href={`${baseUrl}songs/${song.slug}/`}>{song.title}</a>
+        <span class="song-flat-sep">-</span>
+        <span class="song-flat-meta">原调：{song.originalKey}</span>
+        {song.language ? (
+          <>
+            <span class="song-flat-sep">-</span>
+            <span class="song-flat-meta">{song.language === 'yue' ? '粤语' : song.language}</span>
+          </>
+        ) : null}
+        <span class="song-flat-sep">-</span>
+        <span class="song-flat-meta">流行</span>
+        <span class="song-flat-sep">-</span>
+        <span class="song-flat-meta">{song.artist}</span>
       </article>
     ))}
   </section>
