@@ -282,3 +282,12 @@
   - `scripts/normalize-chord-sheet.mjs`
   - `docs/INGEST_WORKFLOW.md`
   - `package.json`
+
+### Step 031 — 删除两首临时示例歌曲
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：删除 `富士山下` 与 `海阔天空` 两首示例 md 文件
+- 原因：用户要求当前只保留《今夜没有风》作为真实样本，后续细节调整以这首歌为基准
+- 结果：站点将只基于真实入库歌曲继续迭代
+- 输出：
+  - 删除 `src/data/fushi-shanxia.md`
+  - 删除 `src/data/hai-kuo-tian-kong.md`
