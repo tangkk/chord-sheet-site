@@ -215,3 +215,12 @@
 - 结果：站点视觉方向已从深色阅读风格切换为浅色清爽风格
 - 输出：
   - `src/layouts/Layout.astro`
+
+### Step 024 — 修复纯音乐和弦行显示粘连问题
+- 时间：2026-04-05 18:xx Asia/Shanghai
+- 动作：为没有歌词内容的 segment 增加最小宽度占位
+- 原因：像 intro / instrumental 这种只有和弦、没有歌词的行，渲染后各和弦会挤在一起，不利于阅读
+- 结果：纯音乐段的和弦之间会保留基本间距
+- 输出：
+  - `src/components/ChordSheet.tsx`
+  - `src/layouts/Layout.astro`

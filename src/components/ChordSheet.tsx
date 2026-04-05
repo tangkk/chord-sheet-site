@@ -84,7 +84,7 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
               {line.segments.map((segment, segmentIndex) => (
                 <span key={`${lineIndex}-${segmentIndex}`} className="segment">
                   <span className="chord">{segment.chord ?? '\u00A0'}</span>
-                  <span className="lyric">{segment.lyric || '\u00A0'}</span>
+                  <span className={`lyric${segment.lyric === '' ? ' spacer' : ''}`}>{segment.lyric || '\u00A0'}</span>
                 </span>
               ))}
             </div>
