@@ -4,8 +4,21 @@ import json
 import re
 from collections import defaultdict
 from pathlib import Path
+from statistics import median
 
 import pdfplumber
+
+
+CHORD_TOKEN_RE = re.compile(
+    r'(?<![A-Za-z0-9])'
+    r'([A-G](?:#|b)?(?:maj|min|dim|aug|sus|add|m|M)?(?:2|4|5|6|7|9|11|13)?(?:sus(?:2|4))?(?:add(?:2|4|9|11|13))?(?:[#b](?:5|9|11|13))*(?:/[A-G](?:#|b)?)?)'
+    r'(?![A-Za-z0-9])'
+)
+SECTION_LINE_RE = re.compile(r'[A-Za-z][A-Za-z0-9 _/\-()]*:')
+LABEL_LINE_RE = re.compile(r"[A-Za-z][A-Za-z0-9 '&/\-]{0,24}")
+PUNCT_ONLY_RE = re.compile(r'^[\s.·•⋯…-]+$')
+CHINESE_RE = re.compile(r'[\u4e00-\u9fff]')
+LETTER_RE = re.compile(r'[A-Za-z]')
 
 
 def norm(text: str) -> str:
@@ -15,6 +28,7 @@ def norm(text: str) -> str:
         .replace('⻄', '西')
         .replace('⻑', '长')
         .replace('⾵', '风')
+        .replace('⻛', '风')
         .replace('⽔', '水')
         .replace('⽣', '生')
         .replace('⽤', '用')
@@ -29,30 +43,62 @@ def norm(text: str) -> str:
     )
 
 
+def canonical_text(text: str) -> str:
+    return norm(text).replace('　', ' ').rstrip()
+
+
 def is_section_line(text: str) -> bool:
-    return bool(re.fullmatch(r'[A-Za-z][A-Za-z0-9 _/-]*:', text.strip()))
+    return bool(SECTION_LINE_RE.fullmatch(text.strip()))
 
 
-def chord_token_count(text: str) -> int:
-    return len(re.findall(r'[A-G](?:#|b)?(?:m|maj|min|sus|add|aug|dim)?\d*(?:[#b]\d+)?(?:/[A-G](?:#|b)?)?', text))
+def find_chord_tokens(text: str):
+    return [m for m in CHORD_TOKEN_RE.finditer(text)]
 
 
-def is_chord_line(text: str) -> bool:
+def chord_stats(text: str):
+    stripped = text.strip()
+    tokens = find_chord_tokens(stripped)
+    significant = re.sub(r'[\s\-–—()\[\]{}|.:·•⋯…]+', '', stripped)
+    token_chars = sum(len(m.group(1)) for m in tokens)
+    coverage = token_chars / len(significant) if significant else 0.0
+    remainder = stripped
+    for match in reversed(tokens):
+        start, end = match.span(1)
+        remainder = remainder[:start] + (' ' * (end - start)) + remainder[end:]
+    remainder = re.sub(r'[\s\-–—()\[\]{}|.:,·•⋯…]+', '', remainder)
+    has_noise = bool(remainder)
+    return {
+        'tokens': [m.group(1) for m in tokens],
+        'count': len(tokens),
+        'coverage': coverage,
+        'significant_len': len(significant),
+        'has_noise': has_noise,
+    }
+
+
+def classify_text(text: str, *, same_row_group_size: int = 1):
     stripped = text.strip()
     if not stripped:
-        return False
-    if re.search(r'[\u4e00-\u9fff]', stripped):
-        return False
-    count = chord_token_count(stripped)
-    return count > 0
-
-
-def is_lyric_line(text: str) -> bool:
-    return bool(re.search(r'[\u4e00-\u9fffA-Za-z]', text)) and not is_chord_line(text)
+        return 'blank'
+    if PUNCT_ONLY_RE.fullmatch(stripped):
+        return 'blank'
+    if is_section_line(stripped):
+        return 'section'
+    stats = chord_stats(stripped)
+    if not CHINESE_RE.search(stripped):
+        if stats['count'] >= 1 and stats['coverage'] >= 0.72 and not stats['has_noise']:
+            return 'chord'
+        if same_row_group_size > 1 and LABEL_LINE_RE.fullmatch(stripped):
+            return 'label'
+        if LABEL_LINE_RE.fullmatch(stripped) and stats['count'] == 0:
+            return 'label'
+    if CHINESE_RE.search(stripped) or LETTER_RE.search(stripped):
+        return 'lyric'
+    return 'other'
 
 
 def group_lines(pdf_path: Path):
-    lines = []
+    raw_lines = []
     with pdfplumber.open(str(pdf_path)) as pdf:
         for page_idx, page in enumerate(pdf.pages, 1):
             grouped = defaultdict(list)
@@ -61,67 +107,228 @@ def group_lines(pdf_path: Path):
             for top in sorted(grouped):
                 chars = sorted(grouped[top], key=lambda c: c['x0'])
                 text = ''.join(c['text'] for c in chars).rstrip()
-                if not text.strip():
-                    continue
-                lines.append({'page': page_idx, 'top': top, 'text': text, 'chars': chars})
-    return lines
+                raw_lines.append({
+                    'page': page_idx,
+                    'top': top,
+                    'text': canonical_text(text),
+                    'chars': chars,
+                    'x0': min(c['x0'] for c in chars),
+                    'x1': max(c['x1'] for c in chars),
+                })
+
+    rows = []
+    i = 0
+    while i < len(raw_lines):
+        base = raw_lines[i]
+        group = [base]
+        j = i + 1
+        while j < len(raw_lines) and raw_lines[j]['page'] == base['page'] and abs(raw_lines[j]['top'] - base['top']) <= 1.0:
+            group.append(raw_lines[j])
+            j += 1
+        group = sorted(group, key=lambda item: item['x0'])
+        for item in group:
+            item['kind'] = classify_text(item['text'], same_row_group_size=len(group))
+        logical_text = ' '.join(item['text'].strip() for item in group if item['kind'] != 'blank').strip()
+        rows.append({
+            'page': base['page'],
+            'top': round(sum(item['top'] for item in group) / len(group), 1),
+            'parts': group,
+            'text': logical_text,
+        })
+        i = j
+    return rows
 
 
-def inject(chord_line, lyric_line):
-    chars = lyric_line['chars']
-    inserts = [[] for _ in range(len(chars) + 1)]
-    for m in re.finditer(r'[A-G](?:#|b)?(?:[^\s]*)', chord_line['text']):
-        tok = m.group(0)
-        token_chars = chord_line['chars'][m.start():m.end()]
+def estimate_line_gap(rows):
+    gaps = []
+    prev = None
+    for row in rows:
+        if prev and prev['page'] == row['page']:
+            gap = row['top'] - prev['top']
+            if gap > 1.5:
+                gaps.append(gap)
+        prev = row
+    return median(gaps) if gaps else 16.0
+
+
+def clean_chord_text(text: str) -> str:
+    return re.sub(r'\s+', ' ', text.strip()).replace('( ', '(').replace(' )', ')')
+
+
+def build_token_positions(chord_part):
+    positions = []
+    text = chord_part['text']
+    for match in find_chord_tokens(text):
+        start, end = match.span(1)
+        token_chars = chord_part['chars'][start:end]
         if not token_chars:
             continue
-        x = token_chars[0]['x0']
-        best = 0
-        best_dist = float('inf')
-        for idx, c in enumerate(chars):
-            dist = abs(c['x0'] - x)
-            if dist < best_dist:
-                best = idx
-                best_dist = dist
-        inserts[best].append(tok)
+        positions.append({'token': match.group(1), 'x0': token_chars[0]['x0']})
+    return positions
+
+
+def inject(chord_row, lyric_row):
+    label_parts = [part for part in lyric_row['parts'] if part['kind'] == 'label' and part['text'].strip()]
+    lyric_parts = [part for part in lyric_row['parts'] if part['kind'] in {'lyric', 'other'} and part['text'].strip()]
+    if not lyric_parts and not label_parts:
+        return ''
+
+    prefix = ' '.join(part['text'].strip() for part in label_parts).replace('　', ' ')
+    if not lyric_parts:
+        return prefix.strip()
+
+    lyric_text = ' '.join(part['text'].strip() for part in lyric_parts).replace('　', ' ')
+    anchor_chars = []
+    prev_part = None
+    for part in lyric_parts:
+        if prev_part is not None and part['x0'] - prev_part['x1'] > 4:
+            anchor_chars.append({'char': ' ', 'x0': (prev_part['x1'] + part['x0']) / 2})
+        for ch in part['chars']:
+            anchor_chars.append({'char': norm(ch['text']), 'x0': ch['x0']})
+        prev_part = part
+
+    if not anchor_chars:
+        return lyric_text.strip()
+
+    inserts = [[] for _ in range(len(anchor_chars) + 1)]
+    trailing = []
+    for chord_part in chord_row['parts']:
+        if chord_part['kind'] != 'chord':
+            continue
+        for item in build_token_positions(chord_part):
+            token = item['token']
+            best = None
+            best_dist = float('inf')
+            for idx, anchor in enumerate(anchor_chars):
+                dist = abs(anchor['x0'] - item['x0'])
+                if dist < best_dist:
+                    best = idx
+                    best_dist = dist
+            if best is None:
+                trailing.append(token)
+                continue
+            if item['x0'] > anchor_chars[-1]['x0'] + 12:
+                trailing.append(token)
+            else:
+                inserts[best].append(token)
 
     out = []
-    for idx, c in enumerate(chars):
+    for idx, anchor in enumerate(anchor_chars):
         if inserts[idx]:
-            out.extend(f'( {t} )' for t in inserts[idx])
-        out.append(norm(c['text']))
-    return ''.join(out).replace('　', ' ')
+            out.extend(f'({token})' for token in inserts[idx])
+        out.append(anchor['char'])
+    if inserts[len(anchor_chars)]:
+        out.extend(f'({token})' for token in inserts[len(anchor_chars)])
+
+    rendered = ''.join(out).replace('  ', ' ').strip()
+    if trailing:
+        rendered = f"{rendered}  {' '.join(f'({token})' for token in trailing)}".rstrip()
+    if prefix:
+        rendered = f'{prefix} {rendered}'.strip()
+    return rendered
 
 
-def build_body(lines):
+def should_skip_as_title(row, title_text: str, title_skipped: bool) -> bool:
+    if title_skipped:
+        return False
+    row_text = row['text'].strip()
+    if not row_text:
+        return False
+    return row_text == canonical_text(title_text).strip()
+
+
+def row_kind(row):
+    kinds = [part['kind'] for part in row['parts'] if part['kind'] != 'blank']
+    if not kinds:
+        return 'blank'
+    if 'section' in kinds:
+        return 'section'
+    non_labels = [kind for kind in kinds if kind != 'label']
+    if non_labels and all(kind == 'chord' for kind in non_labels):
+        return 'chord'
+    if any(kind in {'lyric', 'other'} for kind in kinds):
+        return 'lyric'
+    if all(kind == 'label' for kind in kinds):
+        return 'label'
+    return kinds[0]
+
+
+def build_body(rows, title_text: str):
     content = []
     skip_titles = {'Page 1', 'Page 2'}
     title_skipped = False
+    base_gap = estimate_line_gap(rows)
+    stanza_gap = max(base_gap * 1.7, base_gap + 8)
+    prev_kept_row = None
     i = 0
-    while i < len(lines):
-        raw = norm(lines[i]['text']).strip()
-        if raw in skip_titles:
+
+    while i < len(rows):
+        row = rows[i]
+        text = row['text'].strip()
+        kind = row_kind(row)
+
+        if text in skip_titles:
             i += 1
             continue
-        if not title_skipped:
+        if should_skip_as_title(row, title_text, title_skipped):
             title_skipped = True
             i += 1
             continue
-        if is_section_line(raw):
-            content.append(raw.lower())
-            content.append('')
+        if kind == 'blank' or not text:
+            if content and content[-1] != '':
+                content.append('')
             i += 1
             continue
-        if is_chord_line(raw) and i + 1 < len(lines):
-            next_raw = norm(lines[i + 1]['text']).strip()
-            if is_lyric_line(next_raw):
-                content.append(inject(lines[i], lines[i + 1]))
-                i += 2
+
+        if prev_kept_row and prev_kept_row['page'] == row['page'] and row['top'] - prev_kept_row['top'] >= stanza_gap:
+            if content and content[-1] != '':
+                content.append('')
+
+        if kind == 'section':
+            content.append(text.lower())
+            if not content or content[-1] != '':
+                content.append('')
+            prev_kept_row = row
+            i += 1
+            continue
+
+        if kind == 'chord':
+            lyric_rows = []
+            j = i + 1
+            while j < len(rows):
+                candidate = rows[j]
+                candidate_kind = row_kind(candidate)
+                if candidate['page'] != row['page']:
+                    break
+                if candidate_kind in {'section', 'chord'}:
+                    break
+                if candidate_kind == 'blank':
+                    if candidate['top'] - row['top'] >= base_gap * 0.8:
+                        break
+                    j += 1
+                    continue
+                if candidate['top'] - row['top'] >= stanza_gap:
+                    break
+                lyric_rows.append(candidate)
+                j += 1
+
+            if lyric_rows:
+                content.append(inject(row, lyric_rows[0]))
+                for extra in lyric_rows[1:]:
+                    extra_text = ' '.join(part['text'].strip() for part in extra['parts'] if part['kind'] != 'blank').strip()
+                    if extra_text:
+                        content.append(extra_text)
+                prev_kept_row = lyric_rows[-1]
+                i = j
                 continue
-            content.append(raw)
+
+            content.append(clean_chord_text(text))
+            prev_kept_row = row
             i += 1
             continue
-        content.append(raw)
+
+        content.append(text)
+        prev_kept_row = row
         i += 1
 
     cleaned = []
@@ -163,17 +370,27 @@ def main():
     parser.add_argument('--debug-json')
     args = parser.parse_args()
 
-    lines = group_lines(Path(args.pdf))
-    body_lines = build_body(lines)
+    rows = group_lines(Path(args.pdf))
+    body_lines = build_body(rows, args.title)
 
     if args.debug_json:
         debug = []
-        for line in lines:
+        for row in rows:
             debug.append({
-                'page': line['page'],
-                'top': line['top'],
-                'text': norm(line['text']),
-                'kind': 'section' if is_section_line(norm(line['text']).strip()) else ('chord' if is_chord_line(norm(line['text']).strip()) else 'lyric-or-other'),
+                'page': row['page'],
+                'top': row['top'],
+                'text': row['text'],
+                'kind': row_kind(row),
+                'parts': [
+                    {
+                        'top': part['top'],
+                        'x0': round(part['x0'], 1),
+                        'x1': round(part['x1'], 1),
+                        'text': part['text'],
+                        'kind': part['kind'],
+                    }
+                    for part in row['parts']
+                ],
             })
         debug_path = Path(args.debug_json)
         debug_path.parent.mkdir(parents=True, exist_ok=True)
@@ -184,7 +401,7 @@ def main():
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(md + '\n')
     print(f'wrote {args.out}')
-    print(f'processed {len(lines)} pdf lines via pdfplumber')
+    print(f'processed {len(rows)} logical pdf rows via pdfplumber')
 
 
 if __name__ == '__main__':

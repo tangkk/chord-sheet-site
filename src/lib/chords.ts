@@ -1,6 +1,6 @@
 export type AccidentalMode = 'sharp' | 'flat';
 
-const DEFAULT_SHARP_KEYS = new Set(['C', 'G', 'D', 'A', 'E', 'Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m']);
+const DEFAULT_SHARP_KEYS = new Set(['C', 'G', 'D', 'A', 'E', 'B', 'Am', 'Em', 'Bm', 'F#m']);
 
 export function getDefaultAccidentalMode(key: string): AccidentalMode {
   const normalized = key.trim();
