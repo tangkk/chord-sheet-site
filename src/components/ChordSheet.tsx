@@ -25,14 +25,6 @@ export default function ChordSheet({ text, originalKey, capo }: Props) {
 
   return (
     <section className="chord-sheet-card">
-      <div className="toolbar">
-        <div className="toolbar-group">
-          <span className="label">Key</span>
-          <strong>{displayKey}</strong>
-          <span className="muted">原调 {originalKey}</span>
-        </div>
-      </div>
-
       <div className="floating-toolbar" aria-label="Transpose controls">
         <button type="button" onClick={() => setSemitones((v) => v + 1)}>+</button>
         <button type="button" onClick={() => setSemitones(0)}>0</button>

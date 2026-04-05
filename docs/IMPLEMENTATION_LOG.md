@@ -390,3 +390,11 @@
 - 输出：
   - `src/components/ChordSheet.tsx`
   - `src/layouts/Layout.astro`
+
+### Step 043 — 移除正文上方重复的 key 信息
+- 时间：2026-04-05 19:xx Asia/Shanghai
+- 动作：删除 chord sheet 正文上方的 `Key / A / 原调 A` 信息块
+- 原因：用户指出歌曲头部已经展示了原调，该信息在正文顶部重复且占空间
+- 结果：页面头部信息更简洁，正文更早进入视野
+- 输出：
+  - `src/components/ChordSheet.tsx`
