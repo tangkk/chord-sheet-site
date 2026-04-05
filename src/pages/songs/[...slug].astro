@@ -34,5 +34,5 @@ const languageLabel = normalizeLanguage(song.language);
     </div>
   </section>
 
-  <ChordSheet client:load text={song.body} originalKey={song.originalKey} capo={song.capo} />
+  <ChordSheet client:load text={song.body} originalKey={song.originalKey} sourceKey={song.sourceKey} capo={song.capo} />
 </Layout>

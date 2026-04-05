@@ -535,3 +535,44 @@
 - 输出：
   - `docs/CONTENT_FORMAT.md`
   - `docs/IMPLEMENTATION_LOG.md`
+
+### Step 058 — 记录 sourceKey / originalKey 双字段展示模式
+- 时间：2026-04-05 21:xx Asia/Shanghai
+- 动作：将“原始输入 key 与真实原调不一致时，应记录 `sourceKey` 并在页面默认直接展示 `originalKey`”补入 README 与内容格式文档
+- 原因：用户要求后续支持一种模式：贴入内容可能是 key1，但页面默认展示应直接是原调 key2
+- 结果：该模式已被正式记录为后续实现方向，不再只停留在聊天约定
+- 输出：
+  - `README.md`
+  - `docs/CONTENT_FORMAT.md`
+  - `docs/IMPLEMENTATION_LOG.md`
+
+### Step 059 — 明确括号定位文本不得在句首擅自补和弦
+- 时间：2026-04-05 21:xx Asia/Shanghai
+- 动作：将“和弦行 + 歌词括号定位”模式下，和弦只应落在括号标出的点上，不得默认在句首额外补一个和弦”补入内容格式文档
+- 原因：用户指出《一天一天》中 `C / 谁(当)我觉落漠时` 被错误转换成了句首和括号各一个和弦，这会直接导致和弦数量错误
+- 结果：括号定位模式的解释规则已进一步收紧，后续转换不得再重复此错误
+- 输出：
+  - `docs/CONTENT_FORMAT.md`
+  - `docs/IMPLEMENTATION_LOG.md`
+
+### Step 060 — 实现 sourceKey 默认转到 originalKey 展示
+- 时间：2026-04-05 21:xx Asia/Shanghai
+- 动作：在歌曲 loader 与 ChordSheet 组件中接入 `sourceKey`，页面初始化时自动计算 `sourceKey -> originalKey` 的偏移，并把 transpose 的 0 点定义为原调
+- 原因：用户要求当贴入内容 key 与真实原调不一致时，页面默认展示应直接是原调，而不是 source 调
+- 结果：带 `sourceKey` 的歌曲现在默认打开即显示 `originalKey`，同时 chord-only line 也会一起参与该初始转调
+- 输出：
+  - `src/lib/song-loader.ts`
+  - `src/lib/chords.ts`
+  - `src/components/ChordSheet.tsx`
+  - `src/pages/songs/[...slug].astro`
+
+### Step 061 — 以《一天一天》验证括号定位文本入口规则
+- 时间：2026-04-05 21:xx Asia/Shanghai
+- 动作：使用《一天一天》作为样本，按“和弦只落在括号标出的点上”的规则重新整理 md，并写入 `sourceKey: C` / `originalKey: E`
+- 原因：用户重贴原文并指出第一句被错误多补了和弦，需要按正确规则重做并验证新模式是否可用
+- 结果：文本入口的关键规则已通过真实样本校准，后续可继续沿此口径入库同类歌曲
+- 输出：
+  - `src/data/yitianyitian.md`
+  - `README.md`
+  - `docs/CONTENT_FORMAT.md`
+  - `docs/IMPLEMENTATION_LOG.md`

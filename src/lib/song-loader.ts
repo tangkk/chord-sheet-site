@@ -7,6 +7,7 @@ export type Song = {
   artist: string;
   language?: string;
   originalKey: string;
+  sourceKey?: string;
   capo?: number;
   tags: string[];
   body: string;
@@ -78,6 +79,7 @@ export function getSongs(): Song[] {
         artist: String(meta.artist ?? ''),
         language: meta.language ? String(meta.language) : undefined,
         originalKey: String(meta.originalKey ?? 'C'),
+        sourceKey: meta.sourceKey ? String(meta.sourceKey) : undefined,
         capo: typeof meta.capo === 'number' ? meta.capo : undefined,
         tags: Array.isArray(meta.tags) ? meta.tags.map(String) : [],
         body,

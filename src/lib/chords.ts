@@ -68,3 +68,13 @@ export function transposeChordText(input: string, semitones: number, accidentalM
 export function transposeKey(key: string, semitones: number, accidentalMode: AccidentalMode = 'sharp'): string {
   return transposeChordToken(key, semitones, accidentalMode);
 }
+
+export function semitoneDistance(fromKey: string, toKey: string): number {
+  const fromMatch = fromKey.trim().match(ROOT_REGEX);
+  const toMatch = toKey.trim().match(ROOT_REGEX);
+  if (!fromMatch || !toMatch) return 0;
+  const fromIdx = NOTE_INDEX[fromMatch[1]];
+  const toIdx = NOTE_INDEX[toMatch[1]];
+  if (fromIdx === undefined || toIdx === undefined) return 0;
+  return normalizeIndex(toIdx - fromIdx);
+}

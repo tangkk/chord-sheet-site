@@ -1,23 +1,27 @@
 import React, { useMemo, useState } from 'react';
 import { parseChordSheet } from '../lib/chord-sheet';
-import { getDefaultAccidentalMode, transposeChordText, transposeKey, type AccidentalMode } from '../lib/chords';
+import { getDefaultAccidentalMode, semitoneDistance, transposeChordText, transposeKey, type AccidentalMode } from '../lib/chords';
 
 type Props = {
   text: string;
   originalKey: string;
+  sourceKey?: string;
   capo?: number;
 };
 
-export default function ChordSheet({ text, originalKey, capo }: Props) {
+export default function ChordSheet({ text, originalKey, sourceKey, capo }: Props) {
+  const baseSemitones = useMemo(() => (sourceKey ? semitoneDistance(sourceKey, originalKey) : 0), [sourceKey, originalKey]);
   const [semitones, setSemitones] = useState(0);
   const [accidentalMode, setAccidentalMode] = useState<AccidentalMode>(() => getDefaultAccidentalMode(originalKey));
 
+  const activeSemitones = baseSemitones + semitones;
+
   const renderedText = useMemo(
-    () => transposeChordText(text, semitones, accidentalMode),
-    [text, semitones, accidentalMode],
+    () => transposeChordText(text, activeSemitones, accidentalMode),
+    [text, activeSemitones, accidentalMode],
   );
 
-  const parsed = useMemo(() => parseChordSheet(renderedText, semitones, accidentalMode), [renderedText, semitones, accidentalMode]);
+  const parsed = useMemo(() => parseChordSheet(renderedText, activeSemitones, accidentalMode), [renderedText, activeSemitones, accidentalMode]);
   const displayKey = useMemo(
     () => transposeKey(originalKey, semitones, accidentalMode),
     [originalKey, semitones, accidentalMode],
