@@ -10,9 +10,10 @@ tags:
   - 流行
   - 梁咏琪
 ---
-
+intro:
 C C | Am Am | Ab Ab | G G
 
+verse:
 谁( C )当我觉落漠时
 无( Am )论何日几时
 都( F )教我知完( C/E )全愿意
@@ -27,6 +28,7 @@ C C | Am Am | Ab Ab | G G
 全赖( F )你 凝望我
 才( D/F# )不放弃自( G )己
 
+chorus:
 而你使( C )一天一天( G/B )甜甜丝丝
 ( F )一天一天爱( G )更痴
 ( E )十万日后都( Am )愿意
@@ -36,10 +38,11 @@ C C | Am Am | Ab Ab | G G
 ( E )实在若活多( Am )万次
 都愿( Dm )仍与你 爱恋( G )无( C )限次
 
-Instrumental:
+inst:
 F | C/E | Dm | Cmaj7
 Ab | Eb/G | Fm7 | G
 
+verse:
 而( C )当每晚日落时
 回( Am )望同做的事
 总( F )暗叫好 和( C/E )仍在醉

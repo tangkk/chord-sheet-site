@@ -11,7 +11,6 @@ tags:
 ---
 
 ***verse 1***
-
 (Fmaj7)我寫了(C/E)這⾸歌 是(Dm7)一⾸簡單的
 (Fmaj7)不複雜也(Em7)不難唱的(Dm7)那一(G7)種歌(Cmaj7)
 這不是那種(Fmaj7)只剩下那鋼琴的(Em7)歌
@@ -21,7 +20,6 @@ tags:
 這(Ebmaj7)就是一⾸(Abmaj7)寫給你(Dm9)聽的(G7)一個
 
 ***chorus***
-
 (Cmaj7)Love song
 (Bm11)一直想(E7)寫一⾸(Am7) love song
 (Gm7)你給了(C7)我一⾸(Fmaj7) love song
@@ -36,7 +34,6 @@ yeah 在(Fmaj7)我心底(C/E)你就是我(Ebmaj7)第一
 (Dbmaj7)想說愛(Cmaj7)你
 
 ***verse 2***
-
 我寫了這⾸歌 是一⾸簡單的
 不複雜也不難唱的那一種歌
 這不是那種童話裡會遇見的歌
@@ -46,7 +43,6 @@ yeah 在(Fmaj7)我心底(C/E)你就是我(Ebmaj7)第一
 這就是一⾸寫給你聽的一個
 
 ***chorus***
-
 (Cmaj7)Love song
 一直想寫一⾸ love song
 你給了我一⾸ love song
@@ -61,7 +57,6 @@ Love song
 想說愛你
 
 ***bridge***
-
 (Bbmaj7)如果你是一幅畫
 (Cmaj7)你會是最珍貴的一幅畫
 (Bbmaj7)如果那畫家是梵高的話
@@ -74,7 +69,6 @@ Love song
 讓我(G7)忘了月亮代表我的
 
 ***final chorus***
-
 Yeah, love song
 你給了我一⾸ love song
 那 DJ 會播放 這也許會上榜
