@@ -2,7 +2,7 @@
 title: Singalong song
 artist: 方大同
 language: 英语
-originalKey: C
+originalKey: F
 capo: 0
 tags:
   - 英语
