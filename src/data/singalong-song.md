@@ -1,5 +1,5 @@
 ---
-title: Singalong song
+title: Singalong Song
 artist: 方大同
 language: 英语
 originalKey: F
@@ -10,6 +10,7 @@ tags:
   - 方大同
 ---
 
+verse:
 (F)( )I Wrote This (Am)Song It's Not Too Long
 (Bbsus4)Cos I've Been (C11sus)Thinking about You
 (Fmaj7)( )I Wrote This (Am7)Song Maybe I'm (Bbmaj7)Wrong
@@ -20,6 +21,7 @@ Well (Bb)I Don't Know What (Am7)You Think about Me
 (Bb)But,maybe You Could (Am7)Just Lie To Me
 And (Gm7)We Could (Am7)Be In (Bbm7)Love, You (C11)See  ( )
 
+chorus:
 *oh~ It's A (Fmaj7)Singalong Song That's (Am7)Not Too Long
 It's When I (Bbmaj7)Think About You That (Am7)I Hear Songs
 And You Can (Bb)Singalong Maybe If (Am7)You Want (Dm)To
@@ -28,6 +30,7 @@ Cos (Bbm7)Baby I Wrote This, I (C11)Wrote This For (F)You  (Am)
 inst:
 F Bb F Bbm Csusb9
 
+verse:
 I wrote this song, it's not too long
 'Cause I'm the one who loves you
 I wrote this song, this can't be wrong
@@ -38,7 +41,7 @@ But maybe you want nothing at all
 And how I wish that you're meant to be
 Forever and a day with me
 
-
+bridge:
 (Am)In everyway you mean more to me
 than you'll ever know
 girl I'll (Cm)do my best to (F7)show these words (BbM7)are true  (Bb)
