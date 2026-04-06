@@ -205,45 +205,57 @@ def inject(chord_row, lyric_row):
     prev_part = None
     for part in lyric_parts:
         if prev_part is not None and part['x0'] - prev_part['x1'] > 4:
-            anchor_chars.append({'char': ' ', 'x0': (prev_part['x1'] + part['x0']) / 2})
+            anchor_chars.append({'char': ' ', 'x0': (prev_part['x1'] + part['x0']) / 2, 'x1': (prev_part['x1'] + part['x0']) / 2})
         for ch in part['chars']:
-            anchor_chars.append({'char': norm(ch['text']), 'x0': ch['x0']})
+            anchor_chars.append({'char': norm(ch['text']), 'x0': ch['x0'], 'x1': ch['x1']})
         prev_part = part
 
     if not anchor_chars:
         return lyric_text.strip()
 
-    word_start_indexes = []
-    for idx, anchor in enumerate(anchor_chars):
-        char = anchor['char']
-        if char == ' ':
-            continue
-        if idx == 0 or anchor_chars[idx - 1]['char'] == ' ':
-            word_start_indexes.append(idx)
+    candidate_indexes = [idx for idx, anchor in enumerate(anchor_chars) if anchor['char'] != ' ']
+    if not candidate_indexes:
+        return lyric_text.strip()
 
-    candidate_indexes = word_start_indexes or [idx for idx, anchor in enumerate(anchor_chars) if anchor['char'] != ' ']
     inserts = [[] for _ in range(len(anchor_chars) + 1)]
     trailing = []
+    last_assigned_index = -1
+
     for chord_part in chord_row['parts']:
         if chord_part['kind'] != 'chord':
             continue
         for item in build_token_positions(chord_part):
             token = item['token']
+
+            if item['x0'] > anchor_chars[-1]['x1'] + 12:
+                trailing.append(token)
+                continue
+
             best = None
             best_dist = float('inf')
             for idx in candidate_indexes:
+                if idx <= last_assigned_index:
+                    continue
                 anchor = anchor_chars[idx]
                 dist = abs(anchor['x0'] - item['x0'])
                 if dist < best_dist:
                     best = idx
                     best_dist = dist
+
+            if best is None:
+                for idx in candidate_indexes:
+                    anchor = anchor_chars[idx]
+                    dist = abs(anchor['x0'] - item['x0'])
+                    if dist < best_dist:
+                        best = idx
+                        best_dist = dist
+
             if best is None:
                 trailing.append(token)
                 continue
-            if item['x0'] > anchor_chars[-1]['x0'] + 12:
-                trailing.append(token)
-            else:
-                inserts[best].append(token)
+
+            inserts[best].append(token)
+            last_assigned_index = best
 
     out = []
     for idx, anchor in enumerate(anchor_chars):
