@@ -16,7 +16,7 @@ CHORD_TOKEN_RE = re.compile(
 )
 SECTION_LINE_RE = re.compile(r'[A-Za-z][A-Za-z0-9 _/\-()]*:')
 LABEL_LINE_RE = re.compile(r"[A-Za-z][A-Za-z0-9 '&/\-]{0,24}")
-HIGH_CONFIDENCE_SECTION_RE = re.compile(r'^(verse(?:\s+\d+)?|chorus|bridge|pre-chorus|pre chorus|intro|outro|instrumental|solo|interlude|tag|ending|refrain|hook|final chorus)$', re.IGNORECASE)
+HIGH_CONFIDENCE_SECTION_RE = re.compile(r'^(verse(?:\s+\d+)?|chorus|bridge|pre-chorus|pre chorus|intro|outro|instrumental|inst|solo|interlude|tag|ending|end|refrain|hook|final chorus)$', re.IGNORECASE)
 PUNCT_ONLY_RE = re.compile(r'^[\s.·•⋯…-]+$')
 CHINESE_RE = re.compile(r'[\u4e00-\u9fff]')
 LETTER_RE = re.compile(r'[A-Za-z]')
@@ -87,11 +87,9 @@ def classify_text(text: str, *, same_row_group_size: int = 1):
     if is_section_line(stripped):
         return 'section'
     stats = chord_stats(stripped)
+    if stats['count'] >= 1:
+        return 'chord'
     if not CHINESE_RE.search(stripped):
-        if stats['count'] >= 1 and stats['coverage'] >= 0.72 and not stats['has_noise']:
-            return 'chord'
-        if stats['count'] >= 2 and ENDING_CHORD_LINE_RE.match(stripped):
-            return 'chord'
         if same_row_group_size > 1 and LABEL_LINE_RE.fullmatch(stripped):
             return 'label'
         if LABEL_LINE_RE.fullmatch(stripped) and stats['count'] == 0:
@@ -300,8 +298,14 @@ def row_kind(row):
 
 def normalize_section_label(text: str) -> str:
     normalized = canonical_text(text).strip().rstrip(':').strip()
+    normalized = normalized.strip('()').strip()
     normalized = re.sub(r'\s+', ' ', normalized)
-    return normalized.lower()
+    normalized = normalized.lower()
+    aliases = {
+        'instrumental': 'inst',
+        'ending': 'end',
+    }
+    return aliases.get(normalized, normalized)
 
 
 def is_high_confidence_section_label(text: str) -> bool:
@@ -310,6 +314,23 @@ def is_high_confidence_section_label(text: str) -> bool:
 
 def format_section_label(text: str) -> str:
     return f"***{normalize_section_label(text)}***"
+
+
+def split_inline_label_and_chords(text: str):
+    stripped = canonical_text(text).strip()
+    candidates = [
+        re.match(r'^\(([^)]+)\)\s+(.+)$', stripped),
+        re.match(r'^([A-Za-z][A-Za-z0-9 _/\-]+):\s+(.+)$', stripped),
+    ]
+    for match in candidates:
+        if not match:
+            continue
+        label = normalize_section_label(match.group(1))
+        remainder = clean_chord_text(match.group(2))
+        chord_tokens = [tok for tok in remainder.split() if tok != '|']
+        if is_high_confidence_section_label(label) and chord_tokens and all(find_chord_tokens(tok) for tok in chord_tokens):
+            return label, remainder
+    return None
 
 
 def build_body(rows, title_text: str):
@@ -336,6 +357,18 @@ def build_body(rows, title_text: str):
         if kind == 'blank' or not text:
             if content and content[-1] != '':
                 content.append('')
+            i += 1
+            continue
+
+        inline_label_and_chords = split_inline_label_and_chords(text)
+        if inline_label_and_chords:
+            label, chord_line = inline_label_and_chords
+            if content and content[-1] != '':
+                content.append('')
+            content.append(format_section_label(label))
+            content.append('')
+            content.append(chord_line)
+            prev_kept_row = row
             i += 1
             continue
 

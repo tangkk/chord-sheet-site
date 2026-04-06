@@ -36,6 +36,14 @@ export function parseChordLine(line: string): ParsedLine {
     return { type: 'section', text: trimmed.slice(0, -1) };
   }
 
+  const inlineLabelMatch = trimmed.match(/^\(([^)]+)\)\s+(.+)$/) ?? trimmed.match(/^([A-Za-z][A-Za-z0-9 _/-]+):\s+(.+)$/);
+  if (inlineLabelMatch) {
+    const sectionName = inlineLabelMatch[1].trim().toLowerCase();
+    if (['inst', 'instrumental', 'end', 'ending', 'intro', 'outro', 'solo', 'interlude'].includes(sectionName)) {
+      return { type: 'section', text: sectionName === 'instrumental' ? 'inst' : sectionName === 'ending' ? 'end' : sectionName };
+    }
+  }
+
   const rawParts = trimmed.split(/(\|)/).map((part) => part.trim()).filter((part) => part !== '');
   const chordOnlyCandidates = rawParts.filter((part) => part !== '|').flatMap((part) => part.split(/\s+/)).filter(Boolean);
   const isChordOnly =
