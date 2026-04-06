@@ -11,7 +11,7 @@ import pdfplumber
 
 CHORD_TOKEN_RE = re.compile(
     r'(?<![A-Za-z0-9])'
-    r'([A-G](?:#|b)?(?:maj|min|dim|aug|sus|add|m|M)?(?:2|4|5|6|7|9|11|13)?(?:sus(?:2|4))?(?:add(?:2|4|9|11|13))?(?:[#b](?:5|9|11|13))*(?:/[A-G](?:#|b)?)?)'
+    r'([A-G](?:#|b)?(?:maj|min|dim|aug|m|M)?(?:(?:2|4|5|6|7|9|11|13)(?:sus(?:2|4)?)?|sus(?:2|4)?|add(?:2|4|9|11|13)|(?:[#b](?:5|9|11|13)))*(?:/[A-G](?:#|b)?)?)'
     r'(?![A-Za-z0-9])'
 )
 SECTION_LINE_RE = re.compile(r'[A-Za-z][A-Za-z0-9 _/\-()]*:')
@@ -20,6 +20,7 @@ HIGH_CONFIDENCE_SECTION_RE = re.compile(r'^(verse(?:\s+\d+)?|chorus|bridge|pre-c
 PUNCT_ONLY_RE = re.compile(r'^[\s.·•⋯…-]+$')
 CHINESE_RE = re.compile(r'[\u4e00-\u9fff]')
 LETTER_RE = re.compile(r'[A-Za-z]')
+ENDING_CHORD_LINE_RE = re.compile(r'^\s*[.·•⋯…-]*\s*(?:\d+\.)?\s*[A-G](?:#|b)?')
 
 
 def norm(text: str) -> str:
@@ -89,6 +90,8 @@ def classify_text(text: str, *, same_row_group_size: int = 1):
     if not CHINESE_RE.search(stripped):
         if stats['count'] >= 1 and stats['coverage'] >= 0.72 and not stats['has_noise']:
             return 'chord'
+        if stats['count'] >= 2 and ENDING_CHORD_LINE_RE.match(stripped):
+            return 'chord'
         if same_row_group_size > 1 and LABEL_LINE_RE.fullmatch(stripped):
             return 'label'
         if LABEL_LINE_RE.fullmatch(stripped) and stats['count'] == 0:
@@ -152,8 +155,27 @@ def estimate_line_gap(rows):
     return median(gaps) if gaps else 16.0
 
 
+def normalize_chord_token(token: str) -> str:
+    token = token.strip()
+    token = re.sub(r'^[.·•⋯…]+', '', token)
+    token = re.sub(r'[.·•⋯…]+$', '', token)
+    return token
+
+
 def clean_chord_text(text: str) -> str:
-    return re.sub(r'\s+', ' ', text.strip()).replace('( ', '(').replace(' )', ')')
+    normalized = re.sub(r'\s+', ' ', text.strip()).replace('( ', '(').replace(' )', ')')
+    parts = normalized.split()
+    cleaned = []
+    for part in parts:
+        if part == '|':
+            cleaned.append(part)
+            continue
+        if part == '-':
+            continue
+        cleaned_token = normalize_chord_token(part)
+        if cleaned_token:
+            cleaned.append(cleaned_token)
+    return ' | '.join(cleaned) if '|' in cleaned else ' '.join(cleaned)
 
 
 def build_token_positions(chord_part):
@@ -191,6 +213,15 @@ def inject(chord_row, lyric_row):
     if not anchor_chars:
         return lyric_text.strip()
 
+    word_start_indexes = []
+    for idx, anchor in enumerate(anchor_chars):
+        char = anchor['char']
+        if char == ' ':
+            continue
+        if idx == 0 or anchor_chars[idx - 1]['char'] == ' ':
+            word_start_indexes.append(idx)
+
+    candidate_indexes = word_start_indexes or [idx for idx, anchor in enumerate(anchor_chars) if anchor['char'] != ' ']
     inserts = [[] for _ in range(len(anchor_chars) + 1)]
     trailing = []
     for chord_part in chord_row['parts']:
@@ -200,7 +231,8 @@ def inject(chord_row, lyric_row):
             token = item['token']
             best = None
             best_dist = float('inf')
-            for idx, anchor in enumerate(anchor_chars):
+            for idx in candidate_indexes:
+                anchor = anchor_chars[idx]
                 dist = abs(anchor['x0'] - item['x0'])
                 if dist < best_dist:
                     best = idx

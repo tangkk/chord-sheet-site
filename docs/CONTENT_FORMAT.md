@@ -103,6 +103,15 @@ E/G# F#m7
 - `G/B`
 - `Dsus4`
 - `Cdim`
+- `C11sus`
+- `C11sus4`
+- `C7sus4`
+- `Csusb9`
+
+补充约定：
+- 对 PDF 入库，普通括号文本不自动视为和弦；例如 `(love)`、`(love song)`、`(oh-oh, ooh-ooh)`、`(To Bridge)`、`(Bb key)` 默认都应保留为普通正文或说明
+- 只有高置信和弦 token 才进入 chord 解析、transpose 与和弦渲染
+- 纯和弦 / 无歌词段允许先做 PDF 噪音清洗；例如 `F. - Bb. - F. - Bbm. Csusb9` 入库后应标准化为 `F Bb F Bbm Csusb9`
 
 ## 5. 非目标
 

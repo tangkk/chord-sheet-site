@@ -77,3 +77,4 @@
 - 影响：
   - 调整时应优先检查 `scripts/pdfplumber-to-md.py`、`src/lib/chord-sheet.ts`、`src/lib/chords.ts`、`src/components/ChordSheet.tsx` 与全局样式
   - 对既有单曲文件的修改最多只作为临时验证样本，不应代替根因修复
+  - 新增的 PDF 经验规则（如 chord-only 噪音清洗、词起点注入、混合说明行分类、扩展和弦语法）应同步落到文档，而不是只停留在实现细节里

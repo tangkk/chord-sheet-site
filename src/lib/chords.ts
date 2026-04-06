@@ -1,6 +1,6 @@
 export type AccidentalMode = 'sharp' | 'flat';
 
-export const CHORD_TOKEN_PATTERN = '[A-G](?:#|b)?(?:maj|min|dim|aug|sus|add|m|M)?(?:2|4|5|6|7|9|11|13)?(?:sus(?:2|4))?(?:add(?:2|4|9|11|13))?(?:[#b](?:5|9|11|13))*(?:/[A-G](?:#|b)?)?';
+export const CHORD_TOKEN_PATTERN = '[A-G](?:#|b)?(?:maj|min|dim|aug|m|M)?(?:(?:2|4|5|6|7|9|11|13)(?:sus(?:2|4)?)?|sus(?:2|4)?|add(?:2|4|9|11|13)|(?:[#b](?:5|9|11|13)))*(?:/[A-G](?:#|b)?)?';
 const CHORD_TOKEN_REGEX = new RegExp(`^${CHORD_TOKEN_PATTERN}$`);
 const BRACKETED_CHORD_REGEX = new RegExp(`\\((${CHORD_TOKEN_PATTERN})\\)`, 'g');
 
