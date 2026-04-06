@@ -43,6 +43,8 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     --accent-soft: #f3f4f6;
     --chord: #222222;
     --shadow: 0 8px 24px rgba(17, 17, 17, 0.04);
+    --font-latin: 'Avenir Next', Avenir, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-cjk: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Microsoft YaHei', sans-serif;
   }
 
   * {
@@ -55,7 +57,7 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     min-height: 100%;
     background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    font-family: var(--font-latin), var(--font-cjk);
   }
 
   a {
@@ -373,12 +375,19 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
   }
 
   .section-line {
-    margin: 4px 0 0;
+    margin: 10px 0 4px;
     color: var(--muted);
-    font-size: 0.78rem;
+    font-size: 0.84rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    line-height: 1.2;
+  }
+
+  .section-line-inner {
+    display: inline-block;
+    padding: 1px 0;
+    font-style: italic;
   }
 
   .alt-line {
@@ -427,6 +436,7 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     font-weight: 700;
     line-height: 1;
     letter-spacing: 0;
+    font-family: var(--font-latin);
   }
 
   .chords-only-bar {
@@ -455,6 +465,7 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     font-weight: 700;
     letter-spacing: 0;
     line-height: 1;
+    font-family: var(--font-latin);
   }
 
   .lyric {
@@ -462,6 +473,7 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     min-width: 100%;
     font-size: 0.96rem;
     line-height: 1.18;
+    font-family: var(--font-latin), var(--font-cjk);
   }
 
   .lyric.spacer {

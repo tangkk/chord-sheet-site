@@ -1,5 +1,13 @@
 export type AccidentalMode = 'sharp' | 'flat';
 
+export const CHORD_TOKEN_PATTERN = '[A-G](?:#|b)?(?:maj|min|dim|aug|sus|add|m|M)?(?:2|4|5|6|7|9|11|13)?(?:sus(?:2|4))?(?:add(?:2|4|9|11|13))?(?:[#b](?:5|9|11|13))*(?:/[A-G](?:#|b)?)?';
+const CHORD_TOKEN_REGEX = new RegExp(`^${CHORD_TOKEN_PATTERN}$`);
+const BRACKETED_CHORD_REGEX = new RegExp(`\\((${CHORD_TOKEN_PATTERN})\\)`, 'g');
+
+export function isChordToken(token: string): boolean {
+  return CHORD_TOKEN_REGEX.test(token.trim());
+}
+
 const DEFAULT_SHARP_KEYS = new Set(['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m']);
 
 export function getDefaultAccidentalMode(key: string): AccidentalMode {
@@ -141,7 +149,7 @@ function transposeChordOnlyLine(line: string, semitones: number, accidentalMode:
   const chordOnlyCandidates = rawParts.filter((part) => part !== '|').flatMap((part) => part.split(/\s+/)).filter(Boolean);
   const isChordOnly =
     chordOnlyCandidates.length > 0 &&
-    chordOnlyCandidates.every((token) => /^[A-G](?:#|b)?(?:[^\s|]*)$/.test(token));
+    chordOnlyCandidates.every((token) => isChordToken(token));
 
   if (!isChordOnly) return line;
 
@@ -163,9 +171,11 @@ export function transposeChordText(input: string, semitones: number, accidentalM
   return input
     .split(/\r?\n/)
     .map((line) => {
-      if (/\(([^)]+)\)/.test(line)) {
-        return line.replace(/\(([^)]+)\)/g, (_, chord: string) => `(${transposeChordToken(chord.trim(), semitones, accidentalMode)})`);
+      if (BRACKETED_CHORD_REGEX.test(line)) {
+        BRACKETED_CHORD_REGEX.lastIndex = 0;
+        return line.replace(BRACKETED_CHORD_REGEX, (_, chord: string) => `(${transposeChordToken(chord.trim(), semitones, accidentalMode)})`);
       }
+      BRACKETED_CHORD_REGEX.lastIndex = 0;
       return transposeChordOnlyLine(line, semitones, accidentalMode);
     })
     .join('\n');

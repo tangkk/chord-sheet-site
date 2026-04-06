@@ -54,8 +54,8 @@ export default function ChordSheet({ text, originalKey, sourceKey, capo }: Props
 
           if (line.type === 'section') {
             return (
-              <div key={lineIndex} className="section-line">
-                {line.text}
+              <div key={lineIndex} className="section-line" aria-label={`section ${line.text}`}>
+                <span className="section-line-inner">***{line.text}***</span>
               </div>
             );
           }

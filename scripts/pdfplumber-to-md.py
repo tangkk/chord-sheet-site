@@ -16,6 +16,7 @@ CHORD_TOKEN_RE = re.compile(
 )
 SECTION_LINE_RE = re.compile(r'[A-Za-z][A-Za-z0-9 _/\-()]*:')
 LABEL_LINE_RE = re.compile(r"[A-Za-z][A-Za-z0-9 '&/\-]{0,24}")
+HIGH_CONFIDENCE_SECTION_RE = re.compile(r'^(verse(?:\s+\d+)?|chorus|bridge|pre-chorus|pre chorus|intro|outro|instrumental|solo|interlude|tag|ending|refrain|hook|final chorus)$', re.IGNORECASE)
 PUNCT_ONLY_RE = re.compile(r'^[\s.·•⋯…-]+$')
 CHINESE_RE = re.compile(r'[\u4e00-\u9fff]')
 LETTER_RE = re.compile(r'[A-Za-z]')
@@ -253,6 +254,20 @@ def row_kind(row):
     return kinds[0]
 
 
+def normalize_section_label(text: str) -> str:
+    normalized = canonical_text(text).strip().rstrip(':').strip()
+    normalized = re.sub(r'\s+', ' ', normalized)
+    return normalized.lower()
+
+
+def is_high_confidence_section_label(text: str) -> bool:
+    return bool(HIGH_CONFIDENCE_SECTION_RE.fullmatch(normalize_section_label(text)))
+
+
+def format_section_label(text: str) -> str:
+    return f"***{normalize_section_label(text)}***"
+
+
 def build_body(rows, title_text: str):
     content = []
     skip_titles = {'Page 1', 'Page 2'}
@@ -285,9 +300,10 @@ def build_body(rows, title_text: str):
                 content.append('')
 
         if kind == 'section':
-            content.append(text.lower())
-            if not content or content[-1] != '':
-                content.append('')
+            if is_high_confidence_section_label(text):
+                content.append(format_section_label(text))
+                if not content or content[-1] != '':
+                    content.append('')
             prev_kept_row = row
             i += 1
             continue

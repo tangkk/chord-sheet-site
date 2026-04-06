@@ -1,4 +1,4 @@
-import { transposeKey, type AccidentalMode } from './chords';
+import { isChordToken, transposeKey, type AccidentalMode } from './chords';
 
 export type ParsedSegment = {
   chord: string | null;
@@ -27,6 +27,11 @@ export function parseChordLine(line: string): ParsedLine {
     return { type: 'alt', text: trimmed.replace(/^\[alt\]\s+/i, '') };
   }
 
+  const emphasizedSectionMatch = trimmed.match(/^\*\*\*\s*([^*][^*]*?)\s*\*\*\*$/);
+  if (emphasizedSectionMatch) {
+    return { type: 'section', text: emphasizedSectionMatch[1].trim() };
+  }
+
   if (/^[A-Za-z0-9 _-]+:$/.test(trimmed)) {
     return { type: 'section', text: trimmed.slice(0, -1) };
   }
@@ -35,7 +40,7 @@ export function parseChordLine(line: string): ParsedLine {
   const chordOnlyCandidates = rawParts.filter((part) => part !== '|').flatMap((part) => part.split(/\s+/)).filter(Boolean);
   const isChordOnly =
     chordOnlyCandidates.length > 0 &&
-    chordOnlyCandidates.every((token) => /^[A-G](?:#|b)?(?:[^\s|]*)$/.test(token));
+    chordOnlyCandidates.every((token) => isChordToken(token));
 
   if (isChordOnly) {
     const tokens: ChordOnlyToken[] = [];
@@ -61,12 +66,18 @@ export function parseChordLine(line: string): ParsedLine {
 
   while ((match = regex.exec(line)) !== null) {
     const lyricBefore = line.slice(lastIndex, match.index);
+    const bracketContent = match[1].trim();
+
+    if (!isChordToken(bracketContent)) {
+      continue;
+    }
+
     if (lyricBefore) {
       segments.push({ chord: pendingChord, lyric: lyricBefore });
       pendingChord = null;
     }
 
-    pendingChord = match[1].trim();
+    pendingChord = bracketContent;
     lastIndex = regex.lastIndex;
   }
 
