@@ -2,7 +2,7 @@ export type AccidentalMode = 'sharp' | 'flat';
 
 export const CHORD_TOKEN_PATTERN = '[A-G](?:#|b)?(?:maj|min|dim|aug|m|M)?(?:(?:2|4|5|6|7|9|11|13)(?:sus(?:2|4)?)?|sus(?:2|4)?(?:(?:[#b](?:5|6|9|11|13))|(?:[#b](?:5|6|9|11|13)){2})?|add(?:2|4|5|6|7|9|11|13){1,2}|no(?:3|5)|alt|(?:[#b+](?:5|9|11|13)))*(?:/[A-G](?:#|b)?)?';
 const CHORD_TOKEN_REGEX = new RegExp(`^${CHORD_TOKEN_PATTERN}$`);
-const BRACKETED_CHORD_REGEX = new RegExp(`\\((${CHORD_TOKEN_PATTERN})\\)`, 'g');
+const BRACKETED_CHORD_REGEX = new RegExp(`\\(\\s*(${CHORD_TOKEN_PATTERN})\\s*\\)`, 'g');
 
 export function isChordToken(token: string): boolean {
   return CHORD_TOKEN_REGEX.test(token.trim());
