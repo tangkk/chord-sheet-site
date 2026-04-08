@@ -10,7 +10,6 @@ tags:
   - 方大同
 ---
 intro:
-
 AbM7 | Dm7b5 | DbM7 | Dbm7
 
 verse:
@@ -34,7 +33,7 @@ chorus:
 當(Bbm7)风鑽進(Ab/C)你靠過的(Dbm7)⾐領
 You're always on my mind (Ebsusb9)(AbM7)嘟(Dm7b5)喔  (DbM7) (Dbm7)
 
-Bridge:
+bridge:
 (Fm)(Ebm)我們本(DbM7)是誰(Ab/C)堅持分錯(Bbm)對
 (Cm7)任季節(Dbm6)輪迴你還是(Edim7)你多可(Fm)貴
 (Ebm)管時間它(DbM7)是賊偷(Ab/C)不⾛這份(Bbm)美

@@ -1,7 +1,7 @@
 ---
 title: 阿波罗
 artist: RubberBand
-language: yue
+language: 粤语
 originalKey: C
 capo: 0
 tags:
