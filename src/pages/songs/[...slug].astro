@@ -1,4 +1,5 @@
 ---
+import ChordFinderLink from '../../components/SongChordFinderLink';
 import ChordSheet from '../../components/ChordSheet';
 import Layout from '../../layouts/Layout.astro';
 import { normalizeLanguage } from '../../lib/language';
@@ -33,7 +34,12 @@ const languageLabel = normalizeLanguage(song.language);
       <span>{song.artist}</span>
     </div>
     <div class="hero-link-row align-right-top">
-      <a href={`${baseUrl}chords/?from=${encodeURIComponent(`${baseUrl}songs/${song.slug}/`)}&label=${encodeURIComponent(song.title)}`} class="hero-link">Chord Finder</a>
+      <ChordFinderLink
+        client:load
+        hrefBase={`${baseUrl}chords/?from=${encodeURIComponent(`${baseUrl}songs/${song.slug}/`)}&label=${encodeURIComponent(song.title)}`}
+        fallbackKey={song.originalKey}
+        label="Chord Finder"
+      />
     </div>
   </section>
 

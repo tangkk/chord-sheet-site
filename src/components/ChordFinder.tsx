@@ -1,11 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import ChordDiagram from './ChordDiagram';
-import { findChordVoicings, getDiagramFret, getDisplayFret } from '../lib/chord-finder';
+import { findChordVoicings, getDiagramFret, getDisplayFret, resolveChordQueryName } from '../lib/chord-finder';
+import { getChordFinderDefaultKey, getChordFinderSuggestions } from '../lib/chord-finder-defaults';
 
-const SUGGESTIONS = ['C', 'Am', 'F', 'G', 'Cmaj7', 'Dm7', 'G7', 'Bm7b5', 'F#m7b5'];
+function getInitialQuery() {
+  return getChordFinderDefaultKey();
+}
 
 export default function ChordFinder() {
-  const [query, setQuery] = useState('C');
+  const [query, setQuery] = useState(() => resolveChordQueryName(getInitialQuery()));
+  const suggestions = useMemo(() => getChordFinderSuggestions(getInitialQuery()), []);
   const results = useMemo(() => findChordVoicings(query), [query]);
 
   return (
@@ -29,7 +33,7 @@ export default function ChordFinder() {
       </div>
 
       <div className="chord-finder-suggestions">
-        {SUGGESTIONS.map((item) => (
+        {suggestions.map((item) => (
           <button key={item} type="button" className="chord-pill" onClick={() => setQuery(item)}>
             {item}
           </button>

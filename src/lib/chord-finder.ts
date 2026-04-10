@@ -4,6 +4,19 @@ export type ChordVoicing = {
   notes?: string[];
 };
 
+const ENHARMONIC_EQUIVALENTS: Record<string, string> = {
+  'C#': 'Db',
+  Db: 'C#',
+  'D#': 'Eb',
+  Eb: 'D#',
+  'F#': 'Gb',
+  Gb: 'F#',
+  'G#': 'Ab',
+  Ab: 'G#',
+  'A#': 'Bb',
+  Bb: 'A#',
+};
+
 export const CHORD_VOICINGS: ChordVoicing[] = [
   { name: 'C', fret: 'x32010', notes: ['C', 'E', 'G'] },
   { name: 'C', fret: 'x35553', notes: ['C', 'E', 'G'] },
@@ -417,8 +430,39 @@ function normalizeFret(input: string): string {
   return input.replace(/\s+/g, '');
 }
 
+function splitChordName(name: string): { root: string; suffix: string } | null {
+  const match = name.trim().match(/^([A-G](?:#|b)?)(.*)$/);
+  if (!match) return null;
+  return { root: match[1], suffix: match[2] };
+}
+
+function toEnharmonicName(name: string): string | null {
+  const parsed = splitChordName(name);
+  if (!parsed) return null;
+  const swappedRoot = ENHARMONIC_EQUIVALENTS[parsed.root];
+  if (!swappedRoot) return null;
+  return `${swappedRoot}${parsed.suffix}`;
+}
+
+export function resolveChordQueryName(query: string): string {
+  const trimmed = query.trim();
+  if (!trimmed) return query;
+
+  const exact = CHORD_VOICINGS.find((item) => normalize(item.name) === normalize(trimmed));
+  if (exact) return exact.name;
+
+  const enharmonic = toEnharmonicName(trimmed);
+  if (enharmonic) {
+    const match = CHORD_VOICINGS.find((item) => normalize(item.name) === normalize(enharmonic));
+    if (match) return match.name;
+  }
+
+  return trimmed;
+}
+
 export function findChordVoicings(query: string): ChordVoicing[] {
-  const q = normalize(query);
+  const resolved = resolveChordQueryName(query);
+  const q = normalize(resolved);
   if (!q) return [];
 
   const exact = CHORD_VOICINGS.filter((item) => normalize(item.name) === q);
