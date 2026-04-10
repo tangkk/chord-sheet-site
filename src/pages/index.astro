@@ -8,6 +8,10 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_UR
 ---
 
 <Layout title="tangkk 的个人和弦谱库" description="tangkk 的个人和弦谱库">
+  <nav class="top-nav">
+    <a href={`${baseUrl}chords/`}>Chord Finder</a>
+  </nav>
+
   <header class="home-hero">
     <img class="home-avatar" src={`${baseUrl}me.jpg`} alt="tangkk avatar" />
     <div class="home-hero-copy">

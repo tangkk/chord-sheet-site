@@ -79,6 +79,25 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     margin-bottom: 18px;
   }
 
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .top-nav a {
+    color: var(--muted);
+  }
+
+  .top-nav a:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+
   .site-title {
     margin: 0 0 8px;
     font-size: clamp(2rem, 4vw, 3rem);
@@ -478,6 +497,160 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
 
   .lyric.spacer {
     min-width: 1.35rem;
+  }
+
+  .chord-finder-card {
+    padding: 18px;
+  }
+
+  .chord-finder-head {
+    margin-bottom: 14px;
+  }
+
+  .chord-finder-title {
+    margin-bottom: 6px;
+  }
+
+  .chord-finder-input-row {
+    margin-bottom: 12px;
+  }
+
+  .chord-finder-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    font: inherit;
+    font-size: 1rem;
+    background: #fff;
+    color: var(--text);
+  }
+
+  .chord-finder-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .chord-pill {
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    border: 1px solid var(--panel-border);
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  .chord-finder-results {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .chord-result-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 0;
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .chord-result-row:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .chord-result-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .chord-result-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .chord-result-name {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .chord-result-fret {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.94rem;
+    color: var(--text);
+  }
+
+  .chord-result-notes {
+    color: var(--muted);
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+
+  .chord-diagram {
+    width: 96px;
+    flex: 0 0 auto;
+  }
+
+  .chord-diagram-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .chord-diagram-name {
+    font-size: 0.86rem;
+    font-weight: 700;
+  }
+
+  .chord-diagram-base-fret {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .chord-diagram-svg {
+    display: block;
+    width: 84px;
+    height: 110px;
+    overflow: visible;
+  }
+
+  .chord-diagram-head-text {
+    fill: var(--muted);
+    font-size: 11px;
+    font-family: var(--font-latin);
+  }
+
+  .chord-diagram-string {
+    stroke: #c2c9d1;
+    stroke-width: 1.2;
+  }
+
+  .chord-diagram-fret {
+    stroke: #cfd5dc;
+    stroke-width: 1.2;
+  }
+
+  .chord-diagram-nut {
+    stroke: #7a8088;
+    stroke-width: 3;
+  }
+
+  .chord-diagram-dot {
+    fill: var(--text);
+  }
+
+  .chord-diagram-barre {
+    stroke: var(--text);
+    stroke-width: 9.5;
+    stroke-linecap: round;
   }
 
   @media (max-width: 720px) {
