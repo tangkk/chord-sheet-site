@@ -103,7 +103,7 @@ pnpm align:pdf /path/to/song.pdf > /tmp/song-aligned-draft.txt
 
 ```bash
 cd ~/Documents/Projects/chord-sheet-site
-pnpm pdfplumber:md -- \
+python3 scripts/pdfplumber-to-md.py \
   /path/to/song.pdf \
   --out src/data/song-slug.md \
   --title "歌名" \
@@ -112,6 +112,13 @@ pnpm pdfplumber:md -- \
   --original-key C \
   --tags 国语 流行 歌手名 \
   --debug-json tmp/song-slug-pdfplumber-debug.json
+```
+
+如果要走 package.json 包装命令，也可以：
+
+```bash
+cd ~/Documents/Projects/chord-sheet-site
+pnpm pdfplumber:md -- /path/to/song.pdf --out src/data/song-slug.md --title "歌名" --artist "歌手" --language zh --original-key C --tags 国语 流行 歌手名 --debug-json tmp/song-slug-pdfplumber-debug.json
 ```
 
 2. 保证：和弦不丢、字不丢、行结构不丢

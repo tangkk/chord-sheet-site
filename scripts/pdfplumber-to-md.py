@@ -1,4 +1,40 @@
 #!/usr/bin/env python3
+# PDF -> markdown 草案脚本（当前 chord-sheet-site 的主入口）
+#
+# 脚本位置：scripts/pdfplumber-to-md.py
+#
+# 用途：
+# - 读取 chord sheet PDF
+# - 用 pdfplumber 取字符坐标 / 行坐标
+# - 输出项目可审阅的 md 草案（frontmatter + body）
+#
+# 推荐直接调用方式：
+#   cd ~/Documents/Projects/chord-sheet-site
+#   python3 scripts/pdfplumber-to-md.py \
+#     "/path/to/song.pdf" \
+#     --out src/data/song-slug.md \
+#     --title "歌名" \
+#     --artist "歌手" \
+#     --language yue \
+#     --original-key C \
+#     --tags 粤语 流行 歌手名 \
+#     --debug-json tmp/song-slug-pdfplumber-debug.json
+#
+# package.json 里也有包装命令：
+#   pnpm pdfplumber:md -- "/path/to/song.pdf" --out ... --title ... --artist ... --original-key ...
+#
+# 常用参数：
+# - pdf             输入 PDF 路径（必填，位置参数）
+# - --out           输出 md 路径（必填）
+# - --title         歌名（必填）
+# - --artist        歌手（必填）
+# - --language      语言，默认 zh
+# - --original-key  原调（必填）
+# - --tags          标签，可写多个
+# - --debug-json    输出调试 JSON，便于查分类/对位问题
+#
+# 看 usage：
+#   python3 scripts/pdfplumber-to-md.py -h
 import argparse
 import json
 import re
