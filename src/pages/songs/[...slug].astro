@@ -23,10 +23,6 @@ const languageLabel = normalizeLanguage(song.language);
 ---
 
 <Layout title={`${song.title} · ${song.artist}`} description={`${song.title} 和弦谱`}>
-  <nav class="top-nav">
-    <a href={`${baseUrl}chords/`}>Chord Finder</a>
-  </nav>
-
   <a class="back-link" href={baseUrl}>← tangkk.github.io/chord-sheet-site</a>
 
   <section class="song-hero">
@@ -35,6 +31,9 @@ const languageLabel = normalizeLanguage(song.language);
       {languageLabel ? <span>{languageLabel}</span> : null}
       <span>流行</span>
       <span>{song.artist}</span>
+    </div>
+    <div class="hero-link-row align-right-top">
+      <a href={`${baseUrl}chords/?from=${encodeURIComponent(`${baseUrl}songs/${song.slug}/`)}&label=${encodeURIComponent(song.title)}`} class="hero-link">Chord Finder</a>
     </div>
   </section>
 

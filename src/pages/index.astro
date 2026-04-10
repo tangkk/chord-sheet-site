@@ -8,15 +8,14 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_UR
 ---
 
 <Layout title="tangkk 的个人和弦谱库" description="tangkk 的个人和弦谱库">
-  <nav class="top-nav">
-    <a href={`${baseUrl}chords/`}>Chord Finder</a>
-  </nav>
-
-  <header class="home-hero">
+  <header class="home-hero home-hero--with-action">
     <img class="home-avatar" src={`${baseUrl}me.jpg`} alt="tangkk avatar" />
     <div class="home-hero-copy">
       <p class="home-eyebrow">tangkk.github.io/chord-sheet-site</p>
       <h1 class="site-title home-title">Chord Sheets</h1>
+    </div>
+    <div class="hero-link-row align-right-top home-hero-action">
+      <a href={`${baseUrl}chords/`} class="hero-link">Chord Finder</a>
     </div>
   </header>
 

@@ -98,6 +98,29 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     text-decoration: none;
   }
 
+  .hero-link-row {
+    margin-top: 10px;
+  }
+
+  .hero-link-row.align-right-top {
+    margin-top: 0;
+    margin-left: auto;
+    align-self: flex-start;
+  }
+
+  .hero-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+
+  .hero-link:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+
   .site-title {
     margin: 0 0 8px;
     font-size: clamp(2rem, 4vw, 3rem);
@@ -107,11 +130,20 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
 
   .home-hero {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 18px;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--panel-border);
     margin-bottom: 24px;
+  }
+
+  .home-hero-copy {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .home-hero-action {
+    flex: 0 0 auto;
   }
 
   .home-avatar {
@@ -265,6 +297,11 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     font-size: 0.88rem;
   }
 
+  .song-hero .meta-grid,
+  .home-hero-copy {
+    min-width: 0;
+  }
+
   .back-link {
     display: inline-block;
     margin-bottom: 14px;
@@ -277,6 +314,10 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
   }
 
   .song-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px 12px;
     padding: 0 0 16px;
     margin-bottom: 18px;
     background: transparent;
@@ -290,6 +331,7 @@ const faviconHref = `${baseUrl}favicon.ico?v=20260405-1`;
     font-size: clamp(1.8rem, 3.4vw, 2.4rem);
     line-height: 1.08;
     letter-spacing: -0.02em;
+    width: 100%;
   }
 
   .chord-sheet-card {

@@ -1,11 +1,12 @@
 ---
 import ChordFinder from '../components/ChordFinder';
+import ChordFinderBackLink from '../components/ChordFinderBackLink';
 import Layout from '../layouts/Layout.astro';
 
 const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
 <Layout title="Chord Finder · chord-sheet-site" description="简易 chord 指法搜索页">
-  <a class="back-link" href={baseUrl}>← tangkk.github.io/chord-sheet-site</a>
+  <ChordFinderBackLink client:load fallbackHref={baseUrl} fallbackLabel="← tangkk.github.io/chord-sheet-site" />
   <ChordFinder client:load />
 </Layout>
