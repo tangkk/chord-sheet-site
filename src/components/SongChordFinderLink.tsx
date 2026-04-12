@@ -11,7 +11,10 @@ export default function SongChordFinderLink({ hrefBase, label, fallbackKey }: Pr
     if (typeof window === 'undefined') return;
     event.preventDefault();
     const keyText = document.querySelector<HTMLElement>('.toolbar-key-value')?.textContent?.trim() || fallbackKey;
-    window.location.href = `${hrefBase}&key=${encodeURIComponent(keyText)}`;
+    const semitonesText = document.querySelector<HTMLElement>('.toolbar-semitones')?.textContent?.trim() || '0';
+    const modeText = document.querySelector<HTMLElement>('.toolbar-accidental-mode')?.textContent?.trim() || 'flat';
+    const nextHref = `${hrefBase}&key=${encodeURIComponent(keyText)}&st=${encodeURIComponent(semitonesText)}&mode=${encodeURIComponent(modeText)}`;
+    window.location.href = nextHref;
   };
 
   return (

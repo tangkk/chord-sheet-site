@@ -2,6 +2,20 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { parseChordSheet } from '../lib/chord-sheet';
 import { getDefaultAccidentalMode, semitoneDistance, transposeChordText, transposeKey, type AccidentalMode } from '../lib/chords';
 
+function getInitialSemitones(): number {
+  if (typeof window === 'undefined') return 0;
+  const params = new URLSearchParams(window.location.search);
+  const raw = Number(params.get('st') || '0');
+  return Number.isFinite(raw) ? raw : 0;
+}
+
+function getInitialMode(originalKey: string): AccidentalMode {
+  if (typeof window === 'undefined') return getDefaultAccidentalMode(originalKey);
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get('mode');
+  return raw === 'sharp' || raw === 'flat' ? raw : getDefaultAccidentalMode(originalKey);
+}
+
 type Props = {
   text: string;
   originalKey: string;
@@ -11,9 +25,9 @@ type Props = {
 
 export default function ChordSheet({ text, originalKey, sourceKey, capo }: Props) {
   const baseSemitones = useMemo(() => (sourceKey ? semitoneDistance(sourceKey, originalKey) : 0), [sourceKey, originalKey]);
-  const [semitones, setSemitones] = useState(0);
+  const [semitones, setSemitones] = useState(getInitialSemitones);
   const targetKey = useMemo(() => transposeKey(originalKey, semitones, 'flat'), [originalKey, semitones]);
-  const [accidentalMode, setAccidentalMode] = useState<AccidentalMode>(() => getDefaultAccidentalMode(originalKey));
+  const [accidentalMode, setAccidentalMode] = useState<AccidentalMode>(() => getInitialMode(originalKey));
 
   useEffect(() => {
     setAccidentalMode(getDefaultAccidentalMode(targetKey));
@@ -38,9 +52,10 @@ export default function ChordSheet({ text, originalKey, sourceKey, capo }: Props
         </div>
         <div className="toolbar-group toolbar-buttons">
           <button type="button" onClick={() => setSemitones((v) => v - 1)}>-</button>
-          <button type="button" onClick={() => setSemitones(0)}>{semitones}</button>
+          <button type="button" onClick={() => setSemitones(0)}><span className="toolbar-semitones">{semitones}</span></button>
           <button type="button" onClick={() => setSemitones((v) => v + 1)}>+</button>
           <button type="button" onClick={() => setAccidentalMode((mode) => (mode === 'flat' ? 'sharp' : 'flat'))}>
+            <span className="toolbar-accidental-mode" style={{ display: 'none' }}>{accidentalMode}</span>
             {accidentalMode === 'flat' ? '♭' : '♯'}
           </button>
         </div>
