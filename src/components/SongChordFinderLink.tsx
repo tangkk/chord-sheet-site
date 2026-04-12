@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 type Props = {
   hrefBase: string;
@@ -7,17 +7,15 @@ type Props = {
 };
 
 export default function SongChordFinderLink({ hrefBase, label, fallbackKey }: Props) {
-  const href = useMemo(() => {
-    if (typeof window === 'undefined') {
-      return `${hrefBase}&key=${encodeURIComponent(fallbackKey)}`;
-    }
-
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window === 'undefined') return;
+    event.preventDefault();
     const keyText = document.querySelector<HTMLElement>('.toolbar-key-value')?.textContent?.trim() || fallbackKey;
-    return `${hrefBase}&key=${encodeURIComponent(keyText)}`;
-  }, [hrefBase, fallbackKey]);
+    window.location.href = `${hrefBase}&key=${encodeURIComponent(keyText)}`;
+  };
 
   return (
-    <a href={href} className="hero-link">
+    <a href={`${hrefBase}&key=${encodeURIComponent(fallbackKey)}`} className="hero-link" onClick={handleClick}>
       {label}
     </a>
   );
