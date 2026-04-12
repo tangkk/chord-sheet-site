@@ -22,10 +22,10 @@ Dadd9 Dadd69 Dsusb69 Dsus9 G D/F# Em
 (Em7b5)或当我很爱这对象 (A7sus)离开只叫我原谅
 
 ***chorus***
-(D)woo, (A/C#)i can't write simple (Bm)love songs
+(D)woo, (A/Db)i can't write simple (Bm)love songs
 (Am)just can't write simple (Gmaj7)love songs
 (D/F#)只想结局完(Em)美 付出(A7b9)不依正(D)⽐
-(A/C#)最尾却受被(Bm)掉弃
+(A/Db)最尾却受被(Bm)掉弃
 (Am)繁复的(D7)恋爱⼜怎知爱是(Gmaj7)简单的(D/F#)道理(Em)
 (A7sus)难保⼀世⽩费⼼机
 
@@ -42,9 +42,9 @@ Dadd9 Dadd69 Dsusb69 Dsus9 G D/F# Em
 
 ***chorus***
 (D)i can't write simple love songs
-(A/C#)just can't write simple (Bm)love songs
+(A/Db)just can't write simple (Bm)love songs
 (D/F#)只想结局完(Em)美 付出(A7b9)不依正(D)⽐
-(A/C#)最尾却受被(Bm)掉弃
+(A/Db)最尾却受被(Bm)掉弃
 (Am)繁复的(D7)恋爱⼜怎知爱是(Gmaj7)简单的(D/F#)道理(Em)
 (A7sus)情歌写到阵痛泛起
 
@@ -53,8 +53,8 @@ F#m Gmaj7 F#m Gm Em7b5 A7sus
 
 ***final chorus***
 (D)i can't write simple love songs
-(A/C#)just can't write simple (Bm)love songs
+(A/Db)just can't write simple (Bm)love songs
 (D/F#)只想结局完(Em)美 付出(A7b9)不依正(D)⽐
-(A/C#)最尾却受被(Bm)掉弃
+(A/Db)最尾却受被(Bm)掉弃
 (Am)繁复的(D7)恋爱⼜怎知爱是(Gmaj7)简单的(D/F#)道理(Em)
 (A7sus)难保⼀世⽩费⼼机
