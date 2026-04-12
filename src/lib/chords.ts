@@ -1,5 +1,3 @@
-import { NOTE_INDEX, canonicalizeChordRoot } from './chord-roots';
-
 export type AccidentalMode = 'sharp' | 'flat';
 
 export const CHORD_TOKEN_PATTERN = '[A-G](?:#|b)?(?:maj|min|dim|aug|m|M)?(?:(?:2|4|5|6|7|9|11|13)(?:sus(?:2|4)?)?|sus(?:2|4)?(?:(?:[#b](?:5|6|9|11|13))|(?:[#b](?:5|6|9|11|13)){2})?|add(?:2|4|5|6|7|9|11|13){1,2}|no(?:3|5)|alt|(?:[#b+](?:5|9|11|13)))*(?:/[A-G](?:#|b)?)?';
@@ -27,6 +25,29 @@ const SHARP_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#',
 const FLAT_NOTES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
 const LETTERS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'] as const;
 
+const NOTE_INDEX: Record<string, number> = {
+  C: 0,
+  'B#': 0,
+  'C#': 1,
+  Db: 1,
+  D: 2,
+  'D#': 3,
+  Eb: 3,
+  E: 4,
+  Fb: 4,
+  'E#': 5,
+  F: 5,
+  'F#': 6,
+  Gb: 6,
+  G: 7,
+  'G#': 8,
+  Ab: 8,
+  A: 9,
+  'A#': 10,
+  Bb: 10,
+  B: 11,
+  Cb: 11,
+};
 
 const NATURAL_NOTE_INDEX: Record<(typeof LETTERS)[number], number> = {
   C: 0,
@@ -54,8 +75,7 @@ function transposeNote(note: string, semitones: number, accidentalMode: Accident
   const idx = NOTE_INDEX[note];
   if (idx === undefined) return note;
   const next = normalizeIndex(idx + semitones);
-  const transposed = accidentalMode === 'flat' ? FLAT_NOTES[next] : SHARP_NOTES[next];
-  return canonicalizeChordRoot(transposed);
+  return accidentalMode === 'flat' ? FLAT_NOTES[next] : SHARP_NOTES[next];
 }
 
 function parseChordPart(part: string): { root: string; suffix: string } | null {
@@ -121,7 +141,7 @@ function transposeChordToken(token: string, semitones: number, accidentalMode: A
     .map((part) => {
       const parsed = parseChordPart(part);
       if (!parsed) return part;
-      return `${canonicalizeChordRoot(transposeNote(parsed.root, semitones, accidentalMode))}${parsed.suffix}`;
+      return `${transposeNote(parsed.root, semitones, accidentalMode)}${parsed.suffix}`;
     })
     .join('/');
 }
