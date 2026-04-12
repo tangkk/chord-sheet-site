@@ -4,8 +4,12 @@ export const CHORD_TOKEN_PATTERN = '[A-G](?:#|b)?(?:maj|min|dim|aug|m|M)?(?:(?:2
 const CHORD_TOKEN_REGEX = new RegExp(`^${CHORD_TOKEN_PATTERN}$`);
 const BRACKETED_CHORD_REGEX = new RegExp(`\\(\\s*(${CHORD_TOKEN_PATTERN})\\s*\\)`, 'g');
 
+function normalizeChordToken(token: string): string {
+  return token.trim().replace(/^[.·•⋯…]+/, '').replace(/[.·•⋯…]+$/, '');
+}
+
 export function isChordToken(token: string): boolean {
-  return CHORD_TOKEN_REGEX.test(token.trim());
+  return CHORD_TOKEN_REGEX.test(normalizeChordToken(token));
 }
 
 const DEFAULT_SHARP_KEYS = new Set(['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m']);
@@ -116,6 +120,7 @@ function spellNoteFromChordContext(targetRoot: string, originalRoot: string, ori
 }
 
 function transposeChordToken(token: string, semitones: number, accidentalMode: AccidentalMode): string {
+  token = normalizeChordToken(token);
   const slashParts = token.split('/');
 
   if (slashParts.length === 2) {
