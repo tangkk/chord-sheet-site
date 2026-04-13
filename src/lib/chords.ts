@@ -12,7 +12,7 @@ export function isChordToken(token: string): boolean {
   return CHORD_TOKEN_REGEX.test(normalizeChordToken(token));
 }
 
-const DEFAULT_SHARP_KEYS = new Set(['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m']);
+const DEFAULT_SHARP_KEYS = new Set(['G', 'D', 'A', 'E', 'B', 'F#', 'Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m']);
 
 export function getDefaultAccidentalMode(key: string): AccidentalMode {
   const normalized = key.trim();
