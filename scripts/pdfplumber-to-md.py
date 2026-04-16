@@ -54,6 +54,7 @@ SECTION_LINE_RE = re.compile(r'[A-Za-z][A-Za-z0-9 _/\-()]*:')
 LABEL_LINE_RE = re.compile(r"[A-Za-z][A-Za-z0-9 '&/\-]{0,24}")
 HIGH_CONFIDENCE_SECTION_RE = re.compile(r'^(verse(?:\s+\d+)?|chorus|bridge|pre-chorus|pre chorus|intro|outro|instrumental|inst|solo|interlude|tag|ending|end|refrain|hook|final chorus)$', re.IGNORECASE)
 PUNCT_ONLY_RE = re.compile(r'^[\s.·•⋯…-]+$')
+INLINE_SYMBOL_ONLY_RE = re.compile(r'^[*#※]+$')
 CHINESE_RE = re.compile(r'[\u4e00-\u9fff]')
 LETTER_RE = re.compile(r'[A-Za-z]')
 ENDING_CHORD_LINE_RE = re.compile(r'^\s*[.·•⋯…-]*\s*(?:\d+\.)?\s*[A-G](?:#|b)?')
@@ -120,6 +121,8 @@ def classify_text(text: str, *, same_row_group_size: int = 1):
         return 'blank'
     if PUNCT_ONLY_RE.fullmatch(stripped):
         return 'blank'
+    if INLINE_SYMBOL_ONLY_RE.fullmatch(stripped):
+        return 'inline-symbol'
     if is_section_line(stripped):
         return 'section'
     stats = chord_stats(stripped)
@@ -135,6 +138,16 @@ def classify_text(text: str, *, same_row_group_size: int = 1):
     return 'other'
 
 
+def is_ghost_blank(chars, text: str) -> bool:
+    stripped = canonical_text(text).strip()
+    if stripped:
+        return False
+    if not chars:
+        return False
+    width = max(c['x1'] for c in chars) - min(c['x0'] for c in chars)
+    return width < 8 and len(chars) <= 2
+
+
 def group_lines(pdf_path: Path):
     raw_lines = []
     with pdfplumber.open(str(pdf_path)) as pdf:
@@ -145,6 +158,8 @@ def group_lines(pdf_path: Path):
             for top in sorted(grouped):
                 chars = sorted(grouped[top], key=lambda c: c['x0'])
                 text = ''.join(c['text'] for c in chars).rstrip()
+                if is_ghost_blank(chars, text):
+                    continue
                 raw_lines.append({
                     'page': page_idx,
                     'top': top,
@@ -252,7 +267,6 @@ def inject(chord_row, lyric_row):
         return lyric_text.strip()
 
     inserts = [[] for _ in range(len(anchor_chars) + 1)]
-    trailing = []
     last_assigned_index = -1
 
     for chord_part in chord_row['parts']:
@@ -261,14 +275,10 @@ def inject(chord_row, lyric_row):
         for item in build_token_positions(chord_part):
             token = item['token']
 
-            if item['x0'] > anchor_chars[-1]['x1'] + 12:
-                trailing.append(token)
-                continue
-
             best = None
             best_dist = float('inf')
             for idx in candidate_indexes:
-                if idx <= last_assigned_index:
+                if idx < last_assigned_index:
                     continue
                 anchor = anchor_chars[idx]
                 dist = abs(anchor['x0'] - item['x0'])
@@ -277,16 +287,7 @@ def inject(chord_row, lyric_row):
                     best_dist = dist
 
             if best is None:
-                for idx in candidate_indexes:
-                    anchor = anchor_chars[idx]
-                    dist = abs(anchor['x0'] - item['x0'])
-                    if dist < best_dist:
-                        best = idx
-                        best_dist = dist
-
-            if best is None:
-                trailing.append(token)
-                continue
+                best = last_assigned_index if last_assigned_index >= 0 else candidate_indexes[0]
 
             inserts[best].append(token)
             last_assigned_index = best
@@ -300,8 +301,6 @@ def inject(chord_row, lyric_row):
         out.extend(f'({token})' for token in inserts[len(anchor_chars)])
 
     rendered = ''.join(out).replace('  ', ' ').strip()
-    if trailing:
-        rendered = f"{rendered}  {' '.join(f'({token})' for token in trailing)}".rstrip()
     if prefix:
         rendered = f'{prefix} {rendered}'.strip()
     return rendered
@@ -325,7 +324,7 @@ def row_kind(row):
     non_labels = [kind for kind in kinds if kind != 'label']
     if non_labels and all(kind == 'chord' for kind in non_labels):
         return 'chord'
-    if any(kind in {'lyric', 'other'} for kind in kinds):
+    if any(kind in {'lyric', 'other', 'inline-symbol'} for kind in kinds):
         return 'lyric'
     if all(kind == 'label' for kind in kinds):
         return 'label'
@@ -432,8 +431,6 @@ def build_body(rows, title_text: str):
                 if candidate_kind in {'section', 'chord'}:
                     break
                 if candidate_kind == 'blank':
-                    if candidate['top'] - row['top'] >= base_gap * 0.8:
-                        break
                     j += 1
                     continue
                 if candidate['top'] - row['top'] >= stanza_gap:
@@ -442,12 +439,34 @@ def build_body(rows, title_text: str):
                 j += 1
 
             if lyric_rows:
-                content.append(inject(row, lyric_rows[0]))
-                for extra in lyric_rows[1:]:
-                    extra_text = ' '.join(part['text'].strip() for part in extra['parts'] if part['kind'] != 'blank').strip()
-                    if extra_text:
-                        content.append(extra_text)
-                prev_kept_row = lyric_rows[-1]
+                target_lyric = None
+                consumed_until = None
+                pending_prefix = []
+
+                for idx, lyric_candidate in enumerate(lyric_rows):
+                    candidate_text = lyric_candidate['text'].strip()
+                    if INLINE_SYMBOL_ONLY_RE.fullmatch(candidate_text):
+                        pending_prefix.append(candidate_text)
+                        continue
+                    target_lyric = lyric_candidate
+                    consumed_until = idx
+                    break
+
+                if target_lyric is not None:
+                    injected = inject(row, target_lyric)
+                    if pending_prefix:
+                        injected = f"{' '.join(pending_prefix)} {injected}".strip()
+                    content.append(injected)
+                    for extra in lyric_rows[(consumed_until + 1 if consumed_until is not None else 1):]:
+                        extra_text = ' '.join(part['text'].strip() for part in extra['parts'] if part['kind'] != 'blank').strip()
+                        if extra_text:
+                            content.append(extra_text)
+                    prev_kept_row = lyric_rows[-1]
+                    i = j
+                    continue
+
+                content.append(clean_chord_text(text))
+                prev_kept_row = row
                 i = j
                 continue
 
