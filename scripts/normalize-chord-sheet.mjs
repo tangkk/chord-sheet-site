@@ -16,11 +16,24 @@ function isSectionLine(line) {
 }
 
 function isChordToken(token) {
-  return /^[A-G](?:#|b)?(?:[^\s|]*)$/.test(token);
+  return /^[A-G](?:#|b)?(?:[^\s|∣｜]*)$/.test(token);
+}
+
+function normalizeBarPipes(text) {
+  return text.replace(/[∣｜]/g, '|');
+}
+
+function extractChordTokens(chordLine) {
+  return normalizeBarPipes(chordLine)
+    .replace(/\|/g, ' ')
+    .replace(/---+/g, ' ')
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter((token) => token !== '' && isChordToken(token));
 }
 
 function convertChordMarkerPair(chordLine, lyricLine) {
-  const chords = chordLine.trim().split(/\s+/).filter(Boolean);
+  const chords = extractChordTokens(chordLine);
   const markers = [...lyricLine.matchAll(/\(([^)]*)\)/g)];
 
   if (markers.length === 0) {
@@ -73,20 +86,21 @@ function normalizeBody(raw) {
 
     const next = lines[i + 1]?.trimEnd() ?? '';
     const nextTrimmed = next.trim();
-    const chordTokens = trimmed.split(/\s+/).filter(Boolean);
-    const isChordOnlyLine = chordTokens.length > 0 && trimmed.includes('|') && chordTokens.filter((t) => t !== '|').every((t) => isChordToken(t));
-    const isChordMarkerPair = chordTokens.length > 0 && chordTokens.every((t) => isChordToken(t)) && /\([^)]*\)/.test(nextTrimmed);
-
-    if (isChordOnlyLine) {
-      out.push(trimmed);
-      continue;
-    }
+    const normalizedTrimmed = normalizeBarPipes(trimmed);
+    const chordTokens = extractChordTokens(trimmed);
+    const isChordMarkerPair = chordTokens.length > 0 && /\([^)]*\)/.test(nextTrimmed);
+    const isChordOnlyLine = !isChordMarkerPair && chordTokens.length > 0 && normalizedTrimmed.includes('|');
 
     if (isChordMarkerPair) {
       const { line: converted, warnings: pairWarnings } = convertChordMarkerPair(trimmed, nextTrimmed);
       out.push(converted);
       warnings.push(...pairWarnings);
       i += 1;
+      continue;
+    }
+
+    if (isChordOnlyLine) {
+      out.push(normalizedTrimmed.replace(/\s*\|\s*/g, ' | ').trim());
       continue;
     }
 
